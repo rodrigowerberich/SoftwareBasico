@@ -1,5 +1,5 @@
 ; comentário
-: EQU 1
+FLAG: equ 1
 
 SECTION TEXT
 		INPUT		B ; comentario
@@ -13,7 +13,7 @@ SECTION TEXT
 		STOP
 
 SECTION DATA
-	B:		SPACE
+	b:		space
 	H:		SPACE
-	R:		SPACE
+	r:		SPACE
 	DOIS:	CONST		2

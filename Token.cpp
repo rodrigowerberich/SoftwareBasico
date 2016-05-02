@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <algorithm>
 
 #include "Token.h"
 
@@ -24,6 +25,7 @@ Token::Token (string s_token) throw (invalid_argument) {
 		throw invalid_argument ("Erro Léxico");
 
 	my_token = s_token;
+	transform (my_token.begin(), my_token.end(), my_token.begin(), ::toupper);
 
 }
 
