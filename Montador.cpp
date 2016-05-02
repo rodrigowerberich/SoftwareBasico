@@ -5,10 +5,11 @@
 #include <string>
 #include <sstream>
 
-
 #include "Token.h"
 #include "Montador.h"
 #include "Linha.h"
+
+using namespace std;
 
 namespace Montador{
 
@@ -18,7 +19,6 @@ namespace Montador{
 
 	void Montador::pre_processamento() 
 	{ 
-		using namespace std;
 		Buffer b(arquivo);
 		SeparadorDeLinhas sep;
 		int num_linha = 1;
@@ -38,5 +38,15 @@ namespace Montador{
 					throw;
 			}
 		}
+	}
+
+	// Montar tabela de símbolos
+	// verificar se instrucoes sao válidas
+	// verificar se diretivas sao validas
+	// verificar se sessoes do codigo sao validas
+	Montador::primeira_passagem(){
+
+
+		
 	}
 }

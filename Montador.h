@@ -3,6 +3,8 @@
 
 #include "Linha.h"
 #include "SeparadorDeLinhas.h"
+#include "Tabelas_montador.h"
+#include "Tabelas.h"
 #include <string>
 #include <vector>
 
@@ -13,10 +15,16 @@ class Montador
 public:
 	Montador(std::string);
 	void pre_processamento();
+	void primeira_passagem();
 
 private:
 	std::string arquivo;
 	std::vector<Linha> linhas;
+	Tabela_Simbolos tabela_simbolo;
+	Tabela_Definicoes tabela_definicao;
+	Tabela_Uso tabela_de_uso;
+	Tabela_Instrucoes tabela_instrucao;
+	Tabela_Diretivas tabela_diretiva;
 };
 
 } // namespace Montador
