@@ -15,6 +15,7 @@ public:
 
 	Token(string) throw (invalid_argument);
 	string get_str();
+	bool verifica_rotulo();
 
 protected:
 	string my_token;

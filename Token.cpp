@@ -30,3 +30,10 @@ Token::Token (string s_token) throw (invalid_argument) {
 string Token::get_str(){
 	return my_token;
 }
+
+bool Token::verifica_rotulo(){
+	if (my_token.at(my_token.size()-1) == ':'){
+		return true;
+	}
+	return false;
+}
