@@ -2,9 +2,9 @@
 FLAG: EQU 1
 
 SECTION TEXT
-		INPUT		B
-		INPUT		H
-		LOAD		B
+		INPUT		B ; comentario
+		INPUT		H ;banana
+		LOAD		B ;ola
 		MULT		H
 		IF FLAG
 		DIV		DOIS
