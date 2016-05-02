@@ -1,9 +1,9 @@
-#include "Buffer.h"
-#include "SeparadorDeLinhas.h"
 #include <iostream>
 #include <vector>
 #include <string>
 
+#include "Buffer.h"
+#include "SeparadorDeLinhas.h"
 #include "Token.h"
 #include "Linha.h"
 
