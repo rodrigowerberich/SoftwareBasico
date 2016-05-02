@@ -132,11 +132,12 @@ bool Tabela_Instrucoes::teste_instrucao(string inst){
 
 	for (i = 0; i < instrucao.size(); i++) {
 
-		if ((instrucao[i]) == inst)
+		if ((instrucao[i]) == inst){
 			temp = 1;
+		}
 	}
 
-	if (temp = 1)
+	if (temp == 1)
 		return true;
 	else
 		return false;
@@ -221,7 +222,7 @@ bool Tabela_Diretivas::teste_diretiva(string dir){
 			temp = 1;
 	}
 
-	if (temp = 1)
+	if (temp == 1)
 		return true;
 	else
 		return false;

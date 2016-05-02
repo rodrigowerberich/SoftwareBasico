@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "Tabelas_montador.h"
+
 using namespace std;
 
 // Classe Tabela de Símbolos.
@@ -22,6 +24,8 @@ private:
 	vector<string> rotulo;
 	vector<int> endereco;
 	vector<bool> externo;
+	Tabela_Instrucoes tabela_instrucao;
+	Tabela_Diretivas tabela_diretiva;
 };
 
 // Classe Tabela de Definicoes.

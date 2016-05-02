@@ -1,5 +1,5 @@
 ; comentário
-FLAG: EQU 1
+: EQU 1
 
 SECTION TEXT
 		INPUT		B ; comentario

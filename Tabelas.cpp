@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Tabelas.h"
+#include "Tabelas_montador.h"
 
 using namespace std;
 
@@ -12,6 +13,13 @@ using namespace std;
 void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado) throw (invalid_argument){
 
 	int i;
+
+	if (tabela_instrucao.teste_instrucao(simbolo)) {
+		throw invalid_argument ("Erro semântico");
+	}
+
+	if (tabela_diretiva.teste_diretiva(simbolo))
+		throw invalid_argument ("Erro semântico");
 
 	for (i = 0; i < rotulo.size(); i++) {
 
