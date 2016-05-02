@@ -52,43 +52,28 @@ namespace Montador{
 	void Montador::primeira_passagem(){
 
 		int endereco = 0;
+		string rotulo;
 
 		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
 
 			vector<Token> tokens_linha = linha->get_tokens();
 			if (!tokens_linha.empty()){
-				string rotulo;
-				if (tokens_linha[0].verifica_rotulo()) {
-
-					try {
+				try {
+					if (tokens_linha[0].verifica_rotulo()) {
 						rotulo = tokens_linha[0].get_str().substr(0,tokens_linha[0].get_str().size()-1);
 						tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
-					}catch(const std::invalid_argument& ia){
-						if (ia.what() == string("Erro semântico")){
-							stringstream ss;
-							ss << linha->get_numero();
-							string s_num_linha = ss.str();
-							throw std::invalid_argument(std::string("Erro semântico na linha ")+s_num_linha);
-						}else
-							throw;
-					}
-						cout << rotulo<<endl;;
-
-				}else if(tokens_linha[1].get_str() == string(":")) {
-
-					try {
+						cout << rotulo<<endl;
+					}else if(tokens_linha[1].get_str() == string(":")) {
 						rotulo = tokens_linha[0].get_str();
 						tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
-					}catch(const std::invalid_argument& ia){
-						if (ia.what() == string("Erro semântico")){
-							stringstream ss;
-							ss << linha->get_numero();
-							string s_num_linha = ss.str();
-							throw std::invalid_argument(std::string("Erro semântico na linha ")+s_num_linha);
-						}else
-							throw;
+						cout << rotulo<<endl;
 					}
-						cout <<rotulo<<endl;
+
+				}catch(const std::invalid_argument& ia){
+					stringstream ss;
+					ss << linha->get_numero();
+					string s_num_linha = ss.str();
+					throw std::invalid_argument(ia.what()+std::string(" na linha ")+s_num_linha);
 				}
 			}
 		}

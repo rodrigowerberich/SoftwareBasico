@@ -35,6 +35,10 @@ string Token::get_str(){
 
 bool Token::verifica_rotulo(){
 	if (my_token.at(my_token.size()-1) == ':'){
+		if (my_token.size() < 2)
+		{
+			throw invalid_argument("Erro Sintático");
+		}
 		return true;
 	}
 	return false;
