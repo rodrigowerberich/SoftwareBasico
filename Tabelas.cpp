@@ -16,7 +16,7 @@ void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado
 	for (i = 0; i < rotulo.size(); i++) {
 
 		if ((rotulo[i]) == simbolo)
-			throw invalid_argument ("Erro semântico!");
+			throw invalid_argument ("Erro semântico");
 	}
 
 	rotulo.push_back(simbolo);

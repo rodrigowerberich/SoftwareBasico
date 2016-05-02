@@ -25,6 +25,9 @@ private:
 	Tabela_Uso tabela_de_uso;
 	Tabela_Instrucoes tabela_instrucao;
 	Tabela_Diretivas tabela_diretiva;
+	bool modulo;
+	bool section_text;
+	bool section_data;
 };
 
 } // namespace Montador

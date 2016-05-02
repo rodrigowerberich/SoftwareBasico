@@ -8,6 +8,8 @@
 #include "Token.h"
 #include "Montador.h"
 #include "Linha.h"
+#include "Tabelas_montador.h"
+#include "Tabelas.h"
 
 using namespace std;
 
@@ -15,6 +17,9 @@ namespace Montador{
 
 	Montador::Montador(std::string arquivo_dado){
 		arquivo = arquivo_dado;
+		section_text = false;
+		section_data = false;
+		modulo = false;
 	}
 
 	void Montador::pre_processamento() 
@@ -42,11 +47,50 @@ namespace Montador{
 
 	// Montar tabela de símbolos
 	// verificar se instrucoes sao válidas
-	// verificar se diretivas sao validas
+	// verificar se diretivas sao validas, caso válida, executa-la
 	// verificar se sessoes do codigo sao validas
-	Montador::primeira_passagem(){
+	void Montador::primeira_passagem(){
 
+		int endereco = 0;
 
-		
+		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
+
+			vector<Token> tokens_linha = linha->get_tokens();
+			if (!tokens_linha.empty()){
+				string rotulo;
+				if (tokens_linha[0].verifica_rotulo()) {
+
+					try {
+						rotulo = tokens_linha[0].get_str().substr(0,tokens_linha[0].get_str().size()-1);
+						tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
+					}catch(const std::invalid_argument& ia){
+						if (ia.what() == string("Erro semântico")){
+							stringstream ss;
+							ss << linha->get_numero();
+							string s_num_linha = ss.str();
+							throw std::invalid_argument(std::string("Erro semântico na linha ")+s_num_linha);
+						}else
+							throw;
+					}
+						cout << rotulo<<endl;;
+
+				}else if(tokens_linha[1].get_str() == string(":")) {
+
+					try {
+						rotulo = tokens_linha[0].get_str();
+						tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
+					}catch(const std::invalid_argument& ia){
+						if (ia.what() == string("Erro semântico")){
+							stringstream ss;
+							ss << linha->get_numero();
+							string s_num_linha = ss.str();
+							throw std::invalid_argument(std::string("Erro semântico na linha ")+s_num_linha);
+						}else
+							throw;
+					}
+						cout <<rotulo<<endl;
+				}
+			}
+		}
 	}
 }

@@ -11,7 +11,7 @@ class Linha
 public:
 	Linha(std::vector<Token>,int);
 	//~Linha();
-	std::vector<Token> get_tokens() const{return tokens;};
+	std::vector<Token> get_tokens(){return tokens;};
 	int get_numero() const{return numero;};
 	
 private:
