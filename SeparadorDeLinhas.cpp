@@ -27,6 +27,9 @@ namespace Montador{
 					throw;
 			}
 		}
+		//for(int i=0;i<tokens.size();i++){
+		//		cout << tokens[i].get_str() << endl;
+		//}
 		return tokens;
 	}
 
