@@ -28,12 +28,15 @@ private:
 	Tabela_Instrucoes tabela_instrucao;
 	Tabela_Diretivas tabela_diretiva;
 	bool modulo;
+	bool modulo_aberto;
 	bool section_text;
 	bool section_data;
 	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
 
 	std::string identificar_rotulo(std::vector<Token> &);
-	bool identificar_diretiva(std::vector<Token> &,int &);
+	bool identificar_diretiva(std::vector<Token> &);
+	void executar_diretiva(std::vector<Token> &,std::string,int &);
+	void diretiva_section(std::string);
 	void gerar_erro(const std::invalid_argument&,int);
 };
 

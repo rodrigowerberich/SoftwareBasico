@@ -15,16 +15,16 @@ void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado
 	int i;
 
 	if (tabela_instrucao.teste_instrucao(simbolo)) {
-		throw invalid_argument ("Erro semântico");
+		throw invalid_argument (string("Erro semântico: O Token ")+simbolo+string(" usado é uma palavra reservada"));
 	}
 
 	if (tabela_diretiva.teste_diretiva(simbolo))
-		throw invalid_argument ("Erro semântico");
+		throw invalid_argument (string("Erro semântico: O Token ")+simbolo+string(" usado é uma palavra reservada"));
 
 	for (i = 0; i < rotulo.size(); i++) {
 
 		if ((rotulo[i]) == simbolo)
-			throw invalid_argument ("Erro semântico");
+			throw invalid_argument ("Erro semântico: Definicao duplicada");
 	}
 
 	rotulo.push_back(simbolo);
@@ -47,7 +47,7 @@ int Tabela_Simbolos::getvalor (string simbolo) throw (invalid_argument){
 	}
 
 	if (valor == -2)
-		throw invalid_argument ("Erro semântico");
+		throw invalid_argument ("Erro semântico: Definicao ausente");
 
 	return valor;
 }

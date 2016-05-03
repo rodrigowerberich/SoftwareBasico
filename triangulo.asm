@@ -1,6 +1,7 @@
 ; comentário
 FLAG: equ 1
 
+
 SECTION TEXT
 		INPUT		B ; comentario
 		INPUT		H ;banana
