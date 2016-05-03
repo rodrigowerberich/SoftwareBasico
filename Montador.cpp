@@ -116,14 +116,14 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: SPACE apos o END");
 			if (!section_data)
 				throw invalid_argument("Erro Semântico: Diretiva SPACE na secao errada");
-			tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
+			tabela_simbolo.inserir_simbolo(rotulo,endereco,false,false,false);
 			cout << rotulo << " " << endereco << endl;
 		}else if(diretiva == "CONST"){
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: CONST apos o END");
 			if (!section_data)
 				throw invalid_argument("Erro Semântico: Diretiva CONST na secao errada");
-			tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
+			tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,false);
 			cout << rotulo << " " << endereco << endl;
 		}else if(diretiva == "BEGIN"){
 			if (modulo_aberto)
@@ -152,7 +152,7 @@ namespace Montador{
 		// FALTAM EQU, IF e EXTERN
 
 
-		int num_op = tabela_diretiva.get_operandos(diretiva);
+		unsigned int num_op = tabela_diretiva.get_operandos(diretiva);
 		if(diretiva == "SPACE"){
 			if(1!=tokens.size()-(2+corretor_posicao) && 0!=tokens.size()-(2+corretor_posicao)){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");

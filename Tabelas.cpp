@@ -10,7 +10,7 @@ using namespace std;
 
 // Definicao dos métodos da Classe Tabela de Símbolos
 
-void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado) throw (invalid_argument){
+void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado, bool cnst, bool val_jmp) throw (invalid_argument){
 
 	int i;
 
@@ -30,6 +30,8 @@ void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado
 	rotulo.push_back(simbolo);
 	endereco.push_back(valor);
 	externo.push_back(importado);
+	constante.push_back(cnst);
+	jump_valido.push_back(val_jmp);
 
 }
 
@@ -56,7 +58,7 @@ bool Tabela_Simbolos::teste_externo(string simbolo){
 	
 	int i;
 
-	bool importado;
+	bool importado=false;
 
 	for (i = 0; i < rotulo.size(); i++) {
 
@@ -67,6 +69,36 @@ bool Tabela_Simbolos::teste_externo(string simbolo){
 	return importado;
 }
 
+
+bool Tabela_Simbolos::teste_constante(string simbolo){
+	
+	int i;
+
+	bool csnt=false;
+
+	for (i = 0; i < rotulo.size(); i++) {
+
+		if ((rotulo[i]) == simbolo)
+			csnt = constante[i];
+	}
+
+	return csnt;
+}
+
+bool Tabela_Simbolos::teste_jump_valido(string simbolo){
+	
+	int i;
+
+	bool jmp_valido=false;
+
+	for (i = 0; i < rotulo.size(); i++) {
+
+		if ((rotulo[i]) == simbolo)
+			jmp_valido = jump_valido[i];
+	}
+
+	return jmp_valido;
+}
 
 // Definicao dos métodos da Classe Tabela de Definicoes
 

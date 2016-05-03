@@ -11,5 +11,6 @@ int main(int argc, char const *argv[])
 	Montador::Montador montador(argv[1]);
 	montador.pre_processamento();
 	montador.primeira_passagem();
+
     return 0;
 }
