@@ -14,6 +14,6 @@ SECTION TEXT
 
 SECTION DATA
 	b:		space
-	H:		SPACE
+	H:		SPACE 6
 	r:		SPACE
 	DOIS:	CONST		2

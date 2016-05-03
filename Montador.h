@@ -1,12 +1,14 @@
 #ifndef SB_MONTADOR
 #define SB_MONTADOR
 
-#include "Linha.h"
+#include <string>
+#include <vector>
+
 #include "SeparadorDeLinhas.h"
 #include "Tabelas_montador.h"
 #include "Tabelas.h"
-#include <string>
-#include <vector>
+#include "Linha.h"
+#include "Token.h"
 
 namespace Montador{
 
@@ -28,6 +30,11 @@ private:
 	bool modulo;
 	bool section_text;
 	bool section_data;
+	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
+
+	std::string identificar_rotulo(std::vector<Token> &);
+	bool identificar_diretiva(std::vector<Token> &,int &);
+	void gerar_erro(const std::invalid_argument&,int);
 };
 
 } // namespace Montador

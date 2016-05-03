@@ -158,7 +158,7 @@ Tabela_Diretivas::Tabela_Diretivas(){
 	tamanho.push_back(1);
 
 	diretiva.push_back("PUBLIC");
-	operando.push_back(0);
+	operando.push_back(1);
 	tamanho.push_back(0);
 
 	diretiva.push_back("EQU");
