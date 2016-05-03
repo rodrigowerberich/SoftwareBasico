@@ -12,7 +12,7 @@ using namespace std;
 
 void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado, bool cnst, bool val_jmp) throw (invalid_argument){
 
-	int i;
+	unsigned int i;
 
 	if (tabela_instrucao.teste_instrucao(simbolo)) {
 		throw invalid_argument (string("Erro semântico: O Token ")+simbolo+string(" usado é uma palavra reservada"));
@@ -37,7 +37,7 @@ void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado
 
 int Tabela_Simbolos::getvalor (string simbolo) throw (invalid_argument){
 
-	int i;
+	unsigned int i;
 
 	int valor = -2;
 
@@ -56,7 +56,7 @@ int Tabela_Simbolos::getvalor (string simbolo) throw (invalid_argument){
 
 bool Tabela_Simbolos::teste_externo(string simbolo){
 	
-	int i;
+	unsigned int i;
 
 	bool importado=false;
 
@@ -72,7 +72,7 @@ bool Tabela_Simbolos::teste_externo(string simbolo){
 
 bool Tabela_Simbolos::teste_constante(string simbolo){
 	
-	int i;
+	unsigned int i;
 
 	bool csnt=false;
 
@@ -87,7 +87,7 @@ bool Tabela_Simbolos::teste_constante(string simbolo){
 
 bool Tabela_Simbolos::teste_jump_valido(string simbolo){
 	
-	int i;
+	unsigned int i;
 
 	bool jmp_valido=false;
 
@@ -116,4 +116,24 @@ void Tabela_Uso::inserir_uso (string simbolo, int valor){
 	rotulo.push_back(simbolo);
 	endereco.push_back(valor);
 
+}
+
+void Tabela_EQU::inserir_equ(string simbolo, string value)
+{
+	rotulo.push_back(simbolo);
+	valor.push_back(value);
+}
+
+string Tabela_EQU::pegar_equ(string simbolo)
+{
+	unsigned int i;
+	string value;
+
+	for (i = 0; i < rotulo.size(); i++) {
+
+		if ((rotulo[i]) == simbolo){
+			return valor[i];
+		}
+	}
+	return value;
 }

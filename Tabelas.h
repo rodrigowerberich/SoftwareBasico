@@ -58,4 +58,14 @@ private:
 	vector<int> endereco;
 };
 
+class Tabela_EQU
+{
+public:
+	void inserir_equ (string rotulo, string valor);
+	string pegar_equ (string rotulo);
+private:
+	vector<string> rotulo;
+	vector<string> valor;
+};
+
 #endif
