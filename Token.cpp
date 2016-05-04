@@ -27,7 +27,7 @@ Token::Token (string s_token) throw (invalid_argument) {
 	if (s_token.at(0) == ',' && s_token.size()>1)
 		throw invalid_argument ("Erro Léxico: Caracter , invalido");
 
-	if (!isupper(s_token.at(0)) && !islower(s_token.at(0)) && !(s_token.at(0) == '_') && !(s_token.at(0) == '+') && !(s_token.at(0) == '-') && !(s_token.at(0) == ':') && !isdigit(s_token.at(0)))
+	if (!isupper(s_token.at(0)) && !islower(s_token.at(0)) &&!(s_token.at(0) == ',')&& !(s_token.at(0) == '_') && !(s_token.at(0) == '+') && !(s_token.at(0) == '-') && !(s_token.at(0) == ':') && !isdigit(s_token.at(0)))
 			throw invalid_argument (string("Erro Léxico: Caracter '")+s_token.at(0)+string("' inválido!"));
 
 	if(isdigit(s_token.at(0)) || (s_token.at(0) == '-'))

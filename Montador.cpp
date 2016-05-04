@@ -169,9 +169,11 @@ namespace Montador{
 			corretor_posicao--;
 		}	
 		
-		if(!rotulo.empty())
-			if(isdigit(rotulo.at(0)))
-				throw invalid_argument("Erro Léxico: Token comecando com digito");
+		if(!rotulo.empty()){
+			int tamanho = rotulo.size();
+			if ((rotulo.at(tamanho-1) ==',') || (rotulo.at(0) == '-') || (isdigit(rotulo.at(0))) ||(rotulo == "+")||(rotulo == ","))
+				throw invalid_argument("Erro Sintático: Token invalido como label");
+		}
 		return rotulo;
 	}
 

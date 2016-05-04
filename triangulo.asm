@@ -15,7 +15,7 @@ SECTION TEXT
 		STOP
 
 SECTION DATA
-	B:		space
+	 ,sss :		space
 	H :		SPACE 
 	r:		SPACE
 	DOIS:	CONST		2
