@@ -4,18 +4,18 @@ SOMA: EQU ADD
 
 SECTION TEXT
 		INPUT		B ; comentario
-SOMA:	INPUT		H ;banana
+		INPUT		H ;banana
 		LOAD		B ;ola
 		MULT		H
 		IF FLAG
 		DIV		DOIS
 		STORE		R
-		OUTPUT	R
+		OUTPUT	R+1
 		SOMA R
 		STOP
 
 SECTION DATA
-	b:		space
-	H:		SPACE 
+	B:		space
+	H :		SPACE 
 	r:		SPACE
 	DOIS:	CONST		2

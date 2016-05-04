@@ -16,9 +16,11 @@ public:
 	Token(string) throw (invalid_argument);
 	string get_str();
 	bool verifica_rotulo();
+	const bool is_numerico();
 
 protected:
 	string my_token;
+	bool numerico;
 };
 
 

@@ -156,14 +156,19 @@ namespace Montador{
 			rotulo = tokens[0].get_str().substr(0,tokens[0].get_str().size()-1);
 			//tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
 			//cout << rotulo<<endl;
-		}else if(tokens[1].get_str() == string(":")) {
-			rotulo = tokens[0].get_str();
-			corretor_posicao++;
-			//tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
-			//cout << rotulo<<endl;
+		}else if(tokens.size() > 1){
+			if(tokens[1].get_str() == string(":")) {
+				rotulo = tokens[0].get_str();
+				corretor_posicao++;
+				//tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
+				//cout << rotulo<<endl;
+			}else{
+				corretor_posicao--;
+			}
 		}else{
 			corretor_posicao--;
-		}
+		}	
+		
 		if(!rotulo.empty())
 			if(isdigit(rotulo.at(0)))
 				throw invalid_argument("Erro Léxico: Token comecando com digito");
@@ -265,7 +270,6 @@ namespace Montador{
 			if(!section_text || section_data)
 				throw invalid_argument("Erro Semântico: Diretiva EXTERN na secao errada");	
 		}else if(diretiva == "EQU"){
-			// Tem que fazer algo?
 			if (rotulo.empty()){
 				throw invalid_argument("Erro Sintático: EQU nao possui um label antes");
 			}
