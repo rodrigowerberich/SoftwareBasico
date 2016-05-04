@@ -15,11 +15,11 @@ void Tabela_Simbolos::inserir_simbolo (string simbolo, int valor, bool importado
 	unsigned int i;
 
 	if (tabela_instrucao.teste_instrucao(simbolo)) {
-		throw invalid_argument (string("Erro semântico: O Token ")+simbolo+string(" usado é uma palavra reservada"));
+		throw invalid_argument (string("Erro sintático: O Token ")+simbolo+string(" usado é uma palavra reservada"));
 	}
 
 	if (tabela_diretiva.teste_diretiva(simbolo))
-		throw invalid_argument (string("Erro semântico: O Token ")+simbolo+string(" usado é uma palavra reservada"));
+		throw invalid_argument (string("Erro sintático: O Token ")+simbolo+string(" usado é uma palavra reservada"));
 
 	for (i = 0; i < rotulo.size(); i++) {
 

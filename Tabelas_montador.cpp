@@ -83,7 +83,7 @@ Tabela_Instrucoes::Tabela_Instrucoes(){
 
 int Tabela_Instrucoes::get_opcode(string inst) throw (invalid_argument){
 
-	int i = 0;
+	unsigned int i = 0;
 	int op = -2;
 
 	for (i = 0; i < instrucao.size(); i++) {
@@ -93,14 +93,14 @@ int Tabela_Instrucoes::get_opcode(string inst) throw (invalid_argument){
 	}
 
 	if (op == -2)
-		throw invalid_argument ("Erro Léxico");
+		throw invalid_argument ("Erro Sintático");
 
 	return op;
 }
 
 int Tabela_Instrucoes::get_operandos(string inst){
 
-	int i = 0;
+	unsigned int i = 0;
 	int num_operandos;
 
 	for (i = 0; i < instrucao.size(); i++) {
@@ -114,7 +114,7 @@ int Tabela_Instrucoes::get_operandos(string inst){
 
 int Tabela_Instrucoes::get_tamanho(string inst){
 
-	int i = 0;
+	unsigned int i = 0;
 	int tamanho_inst;
 
 	for (i = 0; i < instrucao.size(); i++) {
@@ -128,7 +128,8 @@ int Tabela_Instrucoes::get_tamanho(string inst){
 
 bool Tabela_Instrucoes::teste_instrucao(string inst){
 
-	int i = 0, temp = 0;
+	unsigned int i = 0;
+	int temp = 0;
 
 	for (i = 0; i < instrucao.size(); i++) {
 
@@ -186,7 +187,7 @@ Tabela_Diretivas::Tabela_Diretivas(){
 
 int Tabela_Diretivas::get_operandos(string dir){
 
-	int i = 0;
+	unsigned int i = 0;
 	int num_operandos;
 
 	for (i = 0; i < diretiva.size(); i++) {
@@ -200,7 +201,7 @@ int Tabela_Diretivas::get_operandos(string dir){
 
 int Tabela_Diretivas::get_tamanho(string dir){
 
-	int i = 0;
+	unsigned int i = 0;
 	int tamanho_dir;
 
 	for (i = 0; i < diretiva.size(); i++) {
@@ -214,7 +215,8 @@ int Tabela_Diretivas::get_tamanho(string dir){
 
 bool Tabela_Diretivas::teste_diretiva(string dir){
 
-	int i = 0, temp = 0;
+	unsigned int i = 0;
+	int temp = 0;
 
 	for (i = 0; i < diretiva.size(); i++) {
 

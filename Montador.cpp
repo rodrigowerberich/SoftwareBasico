@@ -198,6 +198,9 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: SPACE apos o END");
 			if (!section_data)
 				throw invalid_argument("Erro Semântico: Diretiva SPACE na secao errada");
+			if (rotulo.empty()){
+				throw invalid_argument("Erro Sintático: SPACE nao possui um label antes");
+			}
 		}else if(diretiva == "CONST"){
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,false);
@@ -207,6 +210,9 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: CONST apos o END");
 			if (!section_data)
 				throw invalid_argument("Erro Semântico: Diretiva CONST na secao errada");
+			if (rotulo.empty()){
+				throw invalid_argument("Erro Sintático: CONST nao possui um label antes");
+			}
 		}else if(diretiva == "BEGIN"){
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
@@ -216,6 +222,9 @@ namespace Montador{
 			if (modulo_aberto)
 				throw invalid_argument("Erro Semântico: BEGIN duplicado");
 			modulo_aberto = true;
+			if (rotulo.empty()){
+				throw invalid_argument("Erro Sintático: BEGIN nao possui um label antes");
+			}
 			if (section_data || section_text)
 				throw invalid_argument("Erro Semântico: Diretiva BEGIN deve ficar fora de secao");
 		}else if(diretiva == "END"){
@@ -230,8 +239,6 @@ namespace Montador{
 			if (!modulo_aberto)
 				throw invalid_argument("Erro Semântico: END duplicado");
 			modulo_aberto = false;
-			
-			
 		}
 		else if(diretiva == "PUBLIC"){
 			if(!rotulo.empty()){
@@ -259,11 +266,17 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: Diretiva EXTERN na secao errada");	
 		}else if(diretiva == "EQU"){
 			// Tem que fazer algo?
-		}else if(diretiva == "IF"){
-			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
-				cout << rotulo << " " << endereco << endl;
+			if (rotulo.empty()){
+				throw invalid_argument("Erro Sintático: EQU nao possui um label antes");
 			}
+			if (modulo)
+				throw invalid_argument("Erro Semântico: Diretiva EQU deve vir antes do inicio do modulo");
+			if (section_data || section_text)
+				throw invalid_argument("Erro Semântico: Diretiva EQU deve vir antes das secoes");
+		}else if(diretiva == "IF"){
+
+			if(!section_text || section_data)
+				throw invalid_argument("Erro Semântico: Diretiva IF na secao errada");	
 			string argumento = tokens[2+corretor_posicao].get_str();
 			if(argumento == "0"){
 				ignorar_linha = true;
