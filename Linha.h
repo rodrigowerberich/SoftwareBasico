@@ -13,6 +13,7 @@ public:
 	//~Linha();
 	std::vector<Token> get_tokens(){return tokens;};
 	int get_numero() const{return numero;};
+	void substituir_token(string,int);
 	
 private:
 	std::vector<Token> tokens;

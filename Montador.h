@@ -22,6 +22,7 @@ public:
 private:
 	std::string arquivo;
 	std::vector<Linha> linhas;
+	Tabela_EQU tabela_EQU;
 	Tabela_Simbolos tabela_simbolo;
 	Tabela_Definicoes tabela_definicao;
 	Tabela_Uso tabela_de_uso;
@@ -31,12 +32,18 @@ private:
 	bool modulo_aberto;
 	bool section_text;
 	bool section_data;
+	bool ignorar_linha;
+	bool existe_stop;
 	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
 
+
+	void tratar_EQU(Linha&);
 	std::string identificar_rotulo(std::vector<Token> &);
 	bool identificar_diretiva(std::vector<Token> &);
 	void executar_diretiva(std::vector<Token> &,std::string,int &);
 	void diretiva_section(std::string);
+	bool identificar_instrucao(std::vector<Token> &);
+	void executar_instrucao(std::vector<Token> &,std::string,int &);
 	void gerar_erro(const std::invalid_argument&,int);
 };
 

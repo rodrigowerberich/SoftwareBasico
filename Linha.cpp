@@ -13,4 +13,8 @@ namespace Montador{
 		tokens = tokens_dado;
 		numero = numero_dado;
 	}
+
+	void Linha::substituir_token(string novo_valor,int posicao){
+		tokens[posicao] = Token(novo_valor);
+	}
 }

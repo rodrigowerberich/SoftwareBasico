@@ -16,12 +16,15 @@ Token::Token (string s_token) throw (invalid_argument) {
 	if (s_token.at(0) == ';')
 		throw invalid_argument ("Comentario");
 
+	if (s_token.at(0) == ',' && s_token.size()>1)
+		throw invalid_argument ("Erro Léxico: Caracter , invalido");
+
 	for (unsigned int i = 1; i < s_token.size()-1; i++){
 		if (!isupper(s_token.at(i)) && !islower(s_token.at(i)) && !(s_token.at(i) == '_') && !(s_token.at(i) == '+') && !isdigit(s_token.at(i)))
 			throw invalid_argument (string("Erro Léxico: Caracter '")+s_token.at(i)+string("' inválido!"));
 	}
 	int end = s_token.size()-1;
-	if (!isupper(s_token.at(end)) && !islower(s_token.at(end)) && !(s_token.at(end) == '_') && !(s_token.at(end) == ':') && !isdigit(s_token.at(end)))
+	if (!isupper(s_token.at(end)) && !islower(s_token.at(end)) && !(s_token.at(end) == '_') && !(s_token.at(end) == ':') && !isdigit(s_token.at(end)) && !(s_token.at(end) == ','))
 		throw invalid_argument (string("Erro Léxico: Caracter '")+s_token.at(end)+string("' inválido!"));
 
 	my_token = s_token;
