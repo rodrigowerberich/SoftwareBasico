@@ -37,6 +37,7 @@ private:
 	bool existe_stop;
 	bool linha_processada;
 	bool rotulo_sozinho;
+	bool erro;
 	std::string rotulo_anterior;
 	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
 
@@ -46,8 +47,10 @@ private:
 	bool identificar_diretiva(std::vector<Token> &);
 	void executar_diretiva(std::vector<Token> &,std::string,int &);
 	void diretiva_section(std::string);
+	void codificar_diretiva(std::vector<Token> tokens_linha);
 	bool identificar_instrucao(std::vector<Token> &);
 	void executar_instrucao(std::vector<Token> &,std::string,int &);
+	void codificar_instrucao(std::vector<Token> tokens_linha);
 	void gerar_erro(const std::invalid_argument&,int);
 };
 
