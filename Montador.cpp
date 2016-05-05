@@ -249,17 +249,17 @@ namespace Montador{
 		if (diretiva == "SECTION"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: SECTION apos o END");
 			diretiva_section(tokens[2+corretor_posicao].get_str());
 		}else if (diretiva == "SPACE"){
-			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,false,false);
-				cout << rotulo << " " << endereco << endl;
-			}
+			// if(!rotulo.empty()){
+			// 	tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false);
+			// 	cout << rotulo << " " << endereco << endl;
+			// }
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: SPACE apos o END");
 			if (!section_data)
@@ -269,7 +269,7 @@ namespace Montador{
 			}
 		}else if(diretiva == "CONST"){
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,false);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
@@ -282,7 +282,7 @@ namespace Montador{
 		}else if(diretiva == "BEGIN"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
 				cout << rotulo << " " << endereco << endl;
 			}
 			modulo = true;
@@ -297,7 +297,7 @@ namespace Montador{
 		}else if(diretiva == "END"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,false);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if (!modulo)
@@ -310,7 +310,7 @@ namespace Montador{
 		}
 		else if(diretiva == "PUBLIC"){
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
@@ -321,7 +321,7 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: Diretiva PUBLIC na secao errada");			
 		}else if(diretiva == "EXTERN"){
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,0,true,false,true);
+				tabela_simbolo.inserir_simbolo(rotulo,0,0,true,false,true);
 				cout << rotulo << " " << endereco << endl;
 			}else{
 				throw invalid_argument("Erro Sintático: EXTERN sem label");
@@ -361,10 +361,18 @@ namespace Montador{
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
 			}
 			if(0==tokens.size()-(2+corretor_posicao)){
-				endereco+=1;
+				if(!rotulo.empty()){
+			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false);
+			 		cout << rotulo << " " << endereco << endl;
+			    }
+			    endereco+=1;
 			}else if(1==tokens.size()-(2+corretor_posicao)){
 				string num = tokens[2+corretor_posicao].get_str();
-				endereco += atoi(num.c_str());
+				if(!rotulo.empty()){
+			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,atoi(num.c_str()),false,false,false);
+			 		cout << rotulo << " " << endereco << endl;
+			    }
+			    endereco += atoi(num.c_str());
 			}
 		}else{
 			if(num_op!=tokens.size()-(2+corretor_posicao)){
@@ -386,7 +394,7 @@ namespace Montador{
 	void Montador::executar_instrucao(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string instrucao = tokens[1+corretor_posicao].get_str();
 		if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
 				cout << rotulo << " " << endereco << endl;
 		}
 		if(!section_text || section_data)

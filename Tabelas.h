@@ -16,8 +16,9 @@ class Tabela_Simbolos
 {
 
 public:
-	void inserir_simbolo (string rotulo, int endereco, bool externo, bool constante, bool jump_valido) throw (invalid_argument); 
+	void inserir_simbolo (string rotulo, int endereco, int tamanho, bool externo, bool constante, bool jump_valido) throw (invalid_argument); 
 	int getvalor (string rotulo) throw (invalid_argument);
+	int get_tamanho (string rotulo);
 	bool teste_externo (string rotulo);
 	bool teste_constante (string rotulo);
 	bool teste_jump_valido (string rotulo);
@@ -25,6 +26,7 @@ public:
 private:
 	vector<string> rotulo;
 	vector<int> endereco;
+	vector<int> tamanho;
 	vector<bool> externo;
 	vector<bool> constante;
 	vector<bool> jump_valido;
