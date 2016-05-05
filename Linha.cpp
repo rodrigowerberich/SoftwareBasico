@@ -17,4 +17,12 @@ namespace Montador{
 	void Linha::substituir_token(string novo_valor,int posicao){
 		tokens[posicao] = Token(novo_valor);
 	}
+
+	void Linha::remover_rotulo(){
+		if (tokens.size()>1)
+			if(tokens[1].get_str()==":")
+				tokens.erase(tokens.begin());
+		tokens.erase(tokens.begin());
+		
+	}
 }

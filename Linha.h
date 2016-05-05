@@ -14,6 +14,7 @@ public:
 	std::vector<Token> get_tokens(){return tokens;};
 	int get_numero() const{return numero;};
 	void substituir_token(string,int);
+	void remover_rotulo();
 	
 private:
 	std::vector<Token> tokens;

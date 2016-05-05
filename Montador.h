@@ -39,6 +39,7 @@ private:
 	bool rotulo_sozinho;
 	bool erro;
 	std::string rotulo_anterior;
+	std::string codigo;
 	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
 
 
