@@ -18,6 +18,7 @@ public:
 	Montador(std::string);
 	void pre_processamento();
 	void primeira_passagem();
+	void segunda_passagem();
 
 private:
 	std::string arquivo;
@@ -34,6 +35,9 @@ private:
 	bool section_data;
 	bool ignorar_linha;
 	bool existe_stop;
+	bool linha_processada;
+	bool rotulo_sozinho;
+	std::string rotulo_anterior;
 	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
 
 
@@ -46,6 +50,7 @@ private:
 	void executar_instrucao(std::vector<Token> &,std::string,int &);
 	void gerar_erro(const std::invalid_argument&,int);
 };
+
 
 } // namespace Montador
 #endif /* SB_MONTADOR */

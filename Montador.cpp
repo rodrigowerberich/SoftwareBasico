@@ -24,6 +24,8 @@ namespace Montador{
 		modulo_aberto = false;
 		ignorar_linha = false;
 		existe_stop = false;
+		linha_processada = false;
+		rotulo_sozinho = false;
 	}
 
 	void Montador::pre_processamento() 
@@ -63,21 +65,48 @@ namespace Montador{
 
 		int endereco = 0;
 		string rotulo;
-
+		std::vector<vector<Linha>::iterator> linhas_removidas;
 		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
 
 			vector<Token> tokens_linha = linha->get_tokens();
 			corretor_posicao = 0;
+			linha_processada = false;
 			if(!ignorar_linha){
 				try {
 					rotulo = identificar_rotulo(tokens_linha);
+
+					if(!rotulo.empty() && rotulo_sozinho)
+						throw invalid_argument("Erro Sintático: Dois rótulos para a mesma linha");
+
+					if(!rotulo.empty() && tokens_linha.size()<2){
+						rotulo_sozinho = true;
+						rotulo_anterior = rotulo;
+					}
+					else if(!rotulo.empty() && tokens_linha.size()<3){
+						if(tokens_linha[1].get_str()==":"){
+							rotulo_sozinho = true;
+							rotulo_anterior = rotulo;
+						}
+					}
+					else{
+						if(rotulo.empty() && rotulo_sozinho)
+							rotulo = rotulo_anterior;
+						rotulo_sozinho = false;
+					}
+
 					//cout << rotulo << endl;
-					if(identificar_diretiva(tokens_linha))
-						executar_diretiva(tokens_linha,rotulo,endereco);
-					else if(identificar_instrucao(tokens_linha))
-						executar_instrucao(tokens_linha,rotulo,endereco);
-					else
-						throw invalid_argument("Erro sintático: A linha contém Tokens inesperados");
+					if(!rotulo_sozinho){
+						if(identificar_diretiva(tokens_linha))
+							executar_diretiva(tokens_linha,rotulo,endereco);
+						else if(identificar_instrucao(tokens_linha))
+							executar_instrucao(tokens_linha,rotulo,endereco);
+						else{
+							linhas_removidas.push_back(linha);
+							throw invalid_argument("Erro sintático: A linha contém Tokens inesperados");
+						}
+					}
+					if(linha_processada)
+						linhas_removidas.push_back(linha);
 					// if (tabela_diretiva.teste_diretiva(tokens_linha[1+corretor_posicao].get_str())){
 					// 	cout <<tokens_linha[1+corretor_posicao].get_str() <<" é uma diretiva" << endl;
 					// }else if(tabela_instrucao.teste_instrucao(tokens_linha[1+corretor_posicao].get_str())){
@@ -89,8 +118,17 @@ namespace Montador{
 				}catch(const std::invalid_argument& ia){
 					gerar_erro(ia,linha->get_numero());
 				}
-			}else
+			}else{
+				//linhas.erase(linha);
+				//linhas.erase(linha-1);
+				//linhas_removidas.push_back(linha-1);
+				linhas_removidas.push_back(linha);
 				ignorar_linha = false;
+			}
+		}
+		while(!linhas_removidas.empty()){
+			linhas.erase(linhas_removidas.back());
+			linhas_removidas.pop_back();
 		}
 		if(!section_text)
 			cout << "Erro Semântico: Secao TEXT faltante" << endl;
@@ -100,6 +138,24 @@ namespace Montador{
 		if(!modulo && !existe_stop)
 			cout << "Erro Semântico: Falta pelo menos um STOP, e nao é modulo "<<endl;
 			//throw invalid_argument("Erro Semântico: Diretiva END faltando");
+		// for (unsigned int i=0;i<linhas.size();i++){
+		// 	std::vector<Token> tokens = linhas[i].get_tokens();
+		// 	for(unsigned int j=0;j<tokens.size();j++){
+		// 		cout << tokens[j].get_str()<<" ";
+		// 	}
+		// 	cout << endl;
+		// }
+	}
+
+	void Montador::segunda_passagem(){
+		for (unsigned int i=0;i<linhas.size();i++){
+			std::vector<Token> tokens = linhas[i].get_tokens();
+			for(unsigned int j=0;j<tokens.size();j++){
+
+				cout << tokens[j].get_str()<<" ";
+			}
+			cout << endl;
+		}
 	}
 
 	void Montador::tratar_EQU(Linha & linha){
@@ -134,17 +190,19 @@ namespace Montador{
 		if(tokens_linha.size()>1){
 			if(tokens_linha[1].get_str()=="EQU"){
 				equ = true;
-			}else if(tokens_linha[1].get_str()==":" && tokens_linha[2].get_str()=="EQU"){
-				equ = true;
-				corretor_posicao++;
+			}else if(tokens_linha.size()>2){
+				if(tokens_linha[1].get_str()==":" && tokens_linha[2].get_str()=="EQU"){
+					equ = true;
+					corretor_posicao++;
+				}
 			}
 		}
 		if(equ){
 			rotulo = tokens_linha[0].get_str().substr(0,tokens_linha[0].get_str().size()-1);
-			cout << rotulo << endl;
+			//cout << rotulo << endl;
 			if(tokens_linha.size() > (2+corretor_posicao)){
 				valor = tokens_linha[2+corretor_posicao].get_str();
-				cout << valor << endl;
+				//cout << valor << endl;
 				tabela_EQU.inserir_equ(rotulo, valor);
 			}
 		}
@@ -189,6 +247,7 @@ namespace Montador{
 	void Montador::executar_diretiva(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string diretiva = tokens[1+corretor_posicao].get_str();
 		if (diretiva == "SECTION"){
+			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
 				cout << rotulo << " " << endereco << endl;
@@ -221,6 +280,7 @@ namespace Montador{
 				throw invalid_argument("Erro Sintático: CONST nao possui um label antes");
 			}
 		}else if(diretiva == "BEGIN"){
+			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
 				cout << rotulo << " " << endereco << endl;
@@ -235,6 +295,7 @@ namespace Montador{
 			if (section_data || section_text)
 				throw invalid_argument("Erro Semântico: Diretiva BEGIN deve ficar fora de secao");
 		}else if(diretiva == "END"){
+			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,false);
 				cout << rotulo << " " << endereco << endl;
@@ -272,6 +333,7 @@ namespace Montador{
 			if(!section_text || section_data)
 				throw invalid_argument("Erro Semântico: Diretiva EXTERN na secao errada");	
 		}else if(diretiva == "EQU"){
+			linha_processada = true;
 			if (rotulo.empty()){
 				throw invalid_argument("Erro Sintático: EQU nao possui um label antes");
 			}
@@ -280,6 +342,7 @@ namespace Montador{
 			if (section_data || section_text)
 				throw invalid_argument("Erro Semântico: Diretiva EQU deve vir antes das secoes");
 		}else if(diretiva == "IF"){
+			linha_processada = true;
 
 			if(!section_text || section_data)
 				throw invalid_argument("Erro Semântico: Diretiva IF na secao errada");	
@@ -322,6 +385,10 @@ namespace Montador{
 
 	void Montador::executar_instrucao(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string instrucao = tokens[1+corretor_posicao].get_str();
+		if(!rotulo.empty()){
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,false,true,true);
+				cout << rotulo << " " << endereco << endl;
+		}
 		if(!section_text || section_data)
 			throw invalid_argument("Erro Semântico: "+instrucao+" na secao errada");
 
@@ -337,9 +404,14 @@ namespace Montador{
 			}else if(2==tokens.size()-(2+corretor_posicao) && (tokens[2+corretor_posicao].get_str() =="," || tokens[3+corretor_posicao].get_str() ==",")){
 				throw invalid_argument("Erro Sintático: Argumento incorreto");
 			}
-		}else{
+		}else if(instrucao == "JMP" || instrucao == "JMPN" || instrucao == "JMPP" || instrucao == "JMPZ"){
 			if(num_op!=tokens.size()-(2+corretor_posicao)){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
+			}
+		}else{
+			//cout << "num op "<< num_op +2 << " OUtro " << (tokens.size()-(2+corretor_posicao)) <<endl;
+			if(num_op!=tokens.size()-(2+corretor_posicao) && (num_op+2)!=(tokens.size()-(2+corretor_posicao))){
+				throw invalid_argument("Erro Sintático 1: Número incorreto de argumentos");
 			}
 		}
 		endereco += tabela_instrucao.get_tamanho(instrucao);
