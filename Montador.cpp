@@ -120,6 +120,7 @@ namespace Montador{
 					// }
 
 				}catch(const std::invalid_argument& ia){
+					linhas_removidas.push_back(linha);
 					gerar_erro(ia,linha->get_numero());
 				}
 			}else{
@@ -161,13 +162,17 @@ namespace Montador{
 		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
 			vector<Token> tokens_linha = linha->get_tokens();
 			corretor_posicao = -1;
-			if(identificar_diretiva(tokens_linha)){
-				codificar_diretiva(tokens_linha);
-			}else if(identificar_instrucao(tokens_linha)){
-				codificar_instrucao(tokens_linha);
-			}
-			
+			try {
+				if(identificar_diretiva(tokens_linha)){
+					codificar_diretiva(tokens_linha);
+				}else if(identificar_instrucao(tokens_linha)){
+					codificar_instrucao(tokens_linha);
+				}
+			}catch(const std::invalid_argument& ia){
+				gerar_erro(ia,linha->get_numero());
+			} 	
 		}
+		cout << codigo<<endl;
 	}
 
 	void Montador::tratar_EQU(Linha & linha){
@@ -421,7 +426,7 @@ namespace Montador{
 
 		unsigned int num_op = tabela_instrucao.get_operandos(instrucao);
 		if(instrucao == "COPY"){
-			if(2!=tokens.size()-(2+corretor_posicao) && 3!=tokens.size()-(2+corretor_posicao)){
+			if(2>tokens.size()-(2+corretor_posicao) || 7<tokens.size()-(2+corretor_posicao)){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
 			}else if(3==tokens.size()-(2+corretor_posicao) && tokens[3+corretor_posicao].get_str() !=","){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
@@ -473,10 +478,112 @@ namespace Montador{
 	}
 
 	void Montador::codificar_diretiva(std::vector<Token> tokens){
-		return;
+		
+		string argumento, diretiva = tokens[0].get_str(); 
+		int endereco;
+
+		if(diretiva == "PUBLIC") {
+		
+			argumento = tokens[1].get_str();
+			endereco = tabela_simbolo.getvalor(argumento);	
+			tabela_definicao.inserir_definicao(argumento,endereco);
+			cout << argumento << " entrou " <<endereco<<endl;
+			
+		}
+		else if(diretiva == "SPACE") {
+			if (tokens.size()>1) {
+				argumento = tokens[1].get_str();
+				for (int i = 0;i<atoi(argumento.c_str());i++){
+					codigo += "00 ";
+				}
+			}else 
+				codigo += "00 ";
+		}
+		else if(diretiva == "CONST") {
+
+			argumento = tokens[1].get_str();
+			if (!tokens[1].is_numerico()){
+				throw invalid_argument ("Erro sintático: Tipo de argumento inválido");
+			}
+			codigo += argumento + " ";
+		}
 	}
 
 	void Montador::codificar_instrucao(std::vector<Token> tokens){
-		return;
+
+		string argumento, instrucao = tokens[0].get_str(); 
+		int endereco, opcode, operandos, soma;
+
+		if (instrucao == "JMP" || instrucao == "JMPN" || instrucao == "JMPP" || instrucao == "JMPZ"){
+
+			argumento = tokens[1].get_str();
+			endereco = tabela_simbolo.getvalor(argumento);	
+			if (!tabela_simbolo.teste_jump_valido(argumento)){
+				throw invalid_argument ("Erro Semântico: Pulo para rótulo inválido");
+			}
+			opcode = tabela_instrucao.get_opcode(instrucao);
+			stringstream ss;
+			ss << opcode;
+			ss << " ";
+			ss << endereco;
+			string s_opcode = ss.str();
+			
+			codigo += s_opcode + " ";
+		}
+		else if (instrucao == "STOP"){
+
+			opcode = tabela_instrucao.get_opcode(instrucao);
+			stringstream ss;
+			ss << opcode;
+			ss << " ";
+			string s_opcode = ss.str();
+
+			codigo += s_opcode;
+		}
+		else if (instrucao == "COPY") {
+
+		}
+		else {
+			operandos = tabela_instrucao.get_operandos(instrucao);
+
+			if (operandos == (tokens.size() - 1)){
+
+				if ((tokens[1].is_numerico()) || (tokens[1].get_str() == ",")|| (tokens[1].get_str()=="+")){
+					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+				}
+
+				argumento = tokens[1].get_str();
+
+				endereco = tabela_simbolo.getvalor(argumento);
+				opcode = tabela_instrucao.get_opcode(instrucao);
+
+				stringstream ss;
+				ss << opcode;
+				ss << " ";
+				ss << endereco;
+				string s_opcode = ss.str();
+			
+				codigo += s_opcode + " ";
+			
+			} else {
+
+				argumento = tokens[1].get_str();
+				endereco = tabela_simbolo.getvalor(argumento);
+				
+				if (tokens[2].get_str() == "+") {
+					soma = tokens[3].get_str();
+				
+					if (atoi(soma) > tabela_simbolo.get_tamanho(argumento)){
+						throw invalid_argument ("Erro semântico: Endereco de memoria nao reservado"); 
+					}
+
+					opcode = tabela_instrucao.get_opcode(instrucao); 
+
+				}
+			}
+
+		}
+
+
 	}
 }

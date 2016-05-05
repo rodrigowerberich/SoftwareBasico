@@ -15,6 +15,7 @@ C:
 	STOP
 
 SECTION DATA
-A: SPACE 1
-B: SPACE 1
+A: SPACE 5
+B: SPACE 1 
+G: const 5
 END

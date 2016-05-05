@@ -49,7 +49,7 @@ int Tabela_Simbolos::getvalor (string simbolo) throw (invalid_argument){
 	}
 
 	if (valor == -2)
-		throw invalid_argument ("Erro semântico: Definicao ausente");
+		throw invalid_argument ("Erro semântico: Declaracao do rótulo "+simbolo+" ausente");
 
 	return valor;
 }
