@@ -16,12 +16,13 @@ class Tabela_Simbolos
 {
 
 public:
-	void inserir_simbolo (string rotulo, int endereco, int tamanho, bool externo, bool constante, bool jump_valido) throw (invalid_argument); 
+	void inserir_simbolo (string rotulo, int endereco, int tamanho, bool externo, bool constante, bool jump_valido, bool zero) throw (invalid_argument); 
 	int getvalor (string rotulo) throw (invalid_argument);
 	int get_tamanho (string rotulo);
 	bool teste_externo (string rotulo);
 	bool teste_constante (string rotulo);
 	bool teste_jump_valido (string rotulo);
+	bool teste_const_zero (string rotulo);
 
 private:
 	vector<string> rotulo;
@@ -30,6 +31,7 @@ private:
 	vector<bool> externo;
 	vector<bool> constante;
 	vector<bool> jump_valido;
+	vector<bool> zero;
 	Tabela_Instrucoes tabela_instrucao;
 	Tabela_Diretivas tabela_diretiva;
 };
