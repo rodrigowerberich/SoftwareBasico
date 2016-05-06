@@ -26,6 +26,7 @@ namespace Montador{
 		existe_stop = false;
 		linha_processada = false;
 		rotulo_sozinho = false;
+		endereco_uso = 0;
 	}
 
 	void Montador::pre_processamento() 
@@ -266,7 +267,7 @@ namespace Montador{
 		if (diretiva == "SECTION"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true,false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
@@ -286,8 +287,15 @@ namespace Montador{
 			}
 		}else if(diretiva == "CONST"){
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false);
-				cout << rotulo << " " << endereco << endl;
+				if(tokens.size()>2){
+					int argumento = atoi(tokens[2+corretor_posicao].get_str().c_str());
+					if(argumento == 0){
+						tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false,true);
+					}else{
+						tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false,false);
+					}
+					cout << rotulo << " " << endereco << endl;
+				}				
 			}
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: CONST apos o END");
@@ -299,7 +307,7 @@ namespace Montador{
 		}else if(diretiva == "BEGIN"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true, false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			modulo = true;
@@ -314,7 +322,7 @@ namespace Montador{
 		}else if(diretiva == "END"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false, false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if (!modulo)
@@ -327,7 +335,7 @@ namespace Montador{
 		}
 		else if(diretiva == "PUBLIC"){
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true, false);
 				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
@@ -339,7 +347,7 @@ namespace Montador{
 		}else if(diretiva == "EXTERN"){
 			linha_processada = true;
 			if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,0,0,true,false,true);
+				tabela_simbolo.inserir_simbolo(rotulo,0,0,true,false,true,false);
 				cout << rotulo << " " << endereco << endl;
 			}else{
 				throw invalid_argument("Erro Sintático: EXTERN sem label");
@@ -380,7 +388,7 @@ namespace Montador{
 			}
 			if(0==tokens.size()-(2+corretor_posicao)){
 				if(!rotulo.empty()){
-			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false);
+			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false,false);
 			 		cout << rotulo << " " << endereco << endl;
 			    }
 			    endereco+=1;
@@ -390,7 +398,7 @@ namespace Montador{
 				if(num<1)
 					throw invalid_argument("Erro Sintático: Argumento inválido");
 				if(!rotulo.empty()){
-			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,num,false,false,false);
+			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,num,false,false,false,false);
 			 		cout << rotulo << " " << endereco << endl;
 			    }
 			    endereco += num;
@@ -415,7 +423,7 @@ namespace Montador{
 	void Montador::executar_instrucao(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string instrucao = tokens[1+corretor_posicao].get_str();
 		if(!rotulo.empty()){
-				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true);
+				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true,false);
 				cout << rotulo << " " << endereco << endl;
 		}
 		if(!section_text || section_data)
@@ -426,9 +434,7 @@ namespace Montador{
 
 		unsigned int num_op = tabela_instrucao.get_operandos(instrucao);
 		if(instrucao == "COPY"){
-			if(2>tokens.size()-(2+corretor_posicao) || 7<tokens.size()-(2+corretor_posicao)){
-				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
-			}else if(3==tokens.size()-(2+corretor_posicao) && tokens[3+corretor_posicao].get_str() !=","){
+			if(2!=tokens.size()-(2+corretor_posicao) && 4!=tokens.size()-(2+corretor_posicao) && 6!=tokens.size()-(2+corretor_posicao)){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
 			}else if(2==tokens.size()-(2+corretor_posicao) && (tokens[2+corretor_posicao].get_str() =="," || tokens[3+corretor_posicao].get_str() ==",")){
 				throw invalid_argument("Erro Sintático: Argumento incorreto");
@@ -515,8 +521,11 @@ namespace Montador{
 		int endereco, opcode, operandos;
 
 		if (instrucao == "JMP" || instrucao == "JMPN" || instrucao == "JMPP" || instrucao == "JMPZ"){
-
 			argumento = tokens[1].get_str();
+
+			if(tabela_simbolo.teste_externo(argumento))
+				tabela_de_uso.inserir_uso(argumento,endereco_uso+1);
+			
 			endereco = tabela_simbolo.getvalor(argumento);	
 			if (!tabela_simbolo.teste_jump_valido(argumento)){
 				throw invalid_argument ("Erro Semântico: Pulo para rótulo inválido");
@@ -540,23 +549,150 @@ namespace Montador{
 
 			codigo += s_opcode;
 		}
-		// falta COPY
+		// falta COPY, nao copiar para variaveis constantes
 		else if (instrucao == "COPY") {
+			string argumento2,soma2;
+			int endereco2;
+			operandos = tabela_instrucao.get_operandos(instrucao);
+			if(operandos == (tokens.size() - 1)){
 
-		} // Demais instrucoes, faltam casos de 1 token que tem + ou , ou outra coisa.
+				argumento = tokens[1].get_str();
+				argumento2 = tokens[2].get_str();
+				
+				if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || (!(argumento.at(argumento.size()-1)==','))){
+					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+				}
+				if ((tokens[2].is_numerico()) || (argumento2 == ",")|| (argumento2=="+") || (argumento2.at(argumento2.size()-1)==',')){
+					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+				}
+
+				//cout << "Argumento 1: "<<argumento<< " Argumento 2: "<<argumento2<< " Soma: "<<soma<< " Soma 2: "<<soma2<<endl;
+
+
+			}else if(operandos+2 == (tokens.size() - 1)){
+				if(tokens[2].get_str() == "+" && tokens[3].get_str() != "+"){
+					argumento = tokens[1].get_str();
+					argumento2 = tokens[4].get_str();
+					soma = tokens[3].get_str();
+					if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || ((argumento.at(argumento.size()-1)==','))){
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+					}
+					if ((tokens[4].is_numerico()) || (argumento2 == ",")|| (argumento2=="+") || (argumento2.at(argumento2.size()-1)==',')){
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+					}
+					if(soma.at(soma.size()-1)!=',')
+						throw invalid_argument ("Erro sintático: Estrutura inválida"); 
+
+
+
+				}else if(tokens[2].get_str() != "+" && tokens[3].get_str() == "+"){
+					argumento = tokens[1].get_str();
+					argumento2 = tokens[2].get_str();
+					soma2 = tokens[4].get_str();
+					if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || !((argumento.at(argumento.size()-1)==','))){
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+					}
+					if ((tokens[2].is_numerico()) || (argumento2 == ",")|| (argumento2=="+") || (argumento2.at(argumento2.size()-1)==',')){
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+					}
+					if(soma2.at(soma2.size()-1)==',')
+						throw invalid_argument ("Erro sintático: Estrutura inválida"); 
+
+
+				}else 
+					throw invalid_argument("Erro sintático: Estrutura inválida");
+
+			}
+			else if(operandos+4 == (tokens.size() - 1)){
+				if(tokens[2].get_str()!="+" || tokens[5].get_str()!="+")
+					throw invalid_argument("Erro Sintático: Estrutura inválida");
+				
+				argumento = tokens[1].get_str();
+				soma = tokens[3].get_str();
+				argumento2 = tokens[4].get_str();
+				soma2 = tokens[6].get_str();
+
+				if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || (argumento.at(argumento.size()-1)==',')){
+					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+				}
+				if ((tokens[4].is_numerico()) || (argumento2 == ",")|| (argumento2=="+") || (argumento2.at(argumento2.size()-1)==',')){
+					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+				}
+				if(soma.at(soma.size()-1)!=',')
+					throw invalid_argument ("Erro sintático: Estrutura inválida");
+				if(soma2.at(soma2.size()-1)==',')
+					throw invalid_argument ("Erro sintático: Estrutura inválida"); 
+				//cout << "Argumento 1: "<<argumento<< " Argumento 2: "<<argumento2<< " Soma: "<<soma<< " Soma 2: "<<soma2<<endl;
+			}else{
+				throw invalid_argument ("Erro sintático: Estrutura inválida");
+			}
+			endereco = tabela_simbolo.getvalor(argumento);
+			endereco2 = tabela_simbolo.getvalor(argumento2);
+			opcode = tabela_instrucao.get_opcode(instrucao);
+
+			if(tabela_simbolo.teste_constante(argumento2))
+				throw invalid_argument("Erro Semântico: Tentando mudar um valor constante");
+
+			if(!soma.empty()){
+				int n_soma = atoi(soma.c_str());
+
+				if (n_soma >= tabela_simbolo.get_tamanho(argumento) && !tabela_simbolo.teste_externo(argumento)){
+					throw invalid_argument ("Erro Semântico: Endereco de memoria nao reservado"); 
+				}
+				if (n_soma < 0){
+					throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
+				}
+				endereco += n_soma;			
+			}
+
+			if(!soma2.empty()){
+				int n_soma = atoi(soma2.c_str());
+
+				if (n_soma >= tabela_simbolo.get_tamanho(argumento) && !tabela_simbolo.teste_externo(argumento)){
+					throw invalid_argument ("Erro Semântico: Endereco de memoria nao reservado"); 
+				}
+				if (n_soma < 0){
+					throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
+				}
+				endereco2 += n_soma;				
+			}
+
+			stringstream ss;
+			ss << opcode;
+			ss << " ";
+			ss << endereco;
+			ss << " ";
+			ss << endereco2;
+			string s_opcode = ss.str();
+		
+			codigo += s_opcode + " ";
+
+			if(tabela_simbolo.teste_externo(argumento))
+				tabela_de_uso.inserir_uso(argumento,endereco_uso+1);
+
+			if(tabela_simbolo.teste_externo(argumento2))
+				tabela_de_uso.inserir_uso(argumento,endereco_uso+2);
+
+		}
 		else {
 			operandos = tabela_instrucao.get_operandos(instrucao);
 
 			if (operandos == (tokens.size() - 1)){
 
-				if ((tokens[1].is_numerico()) || (tokens[1].get_str() == ",")|| (tokens[1].get_str()=="+")){
+				argumento = tokens[1].get_str();
+
+				if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || (argumento.at(argumento.size()-1)==',')){
 					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
 				}
 
-				argumento = tokens[1].get_str();
-
 				endereco = tabela_simbolo.getvalor(argumento);
 				opcode = tabela_instrucao.get_opcode(instrucao);
+
+				if(instrucao == "STORE" && tabela_simbolo.teste_constante(argumento))
+					throw invalid_argument("Erro Semântico: Tentando mudar um valor constante");
+
+				if(instrucao == "DIV" && tabela_simbolo.teste_const_zero(argumento))
+					throw invalid_argument("Erro Semântico: Divisao por zero");
 
 				stringstream ss;
 				ss << opcode;
@@ -572,6 +708,11 @@ namespace Montador{
 				endereco = tabela_simbolo.getvalor(argumento);
 				
 				if (tokens[2].get_str() == "+") {
+
+
+					if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || (argumento.at(argumento.size()-1)==',')){
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
+					}
 					
 					if (!tokens[3].is_numerico()){
 						throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
@@ -580,7 +721,10 @@ namespace Montador{
 					soma = tokens[3].get_str();
 					int n_soma = atoi(soma.c_str());
 
-					if (n_soma >= tabela_simbolo.get_tamanho(argumento)){
+					if(soma.at(soma.size()-1)==',')
+						throw invalid_argument ("Erro sintático: Tipo de argumento inválido");
+
+					if (n_soma >= tabela_simbolo.get_tamanho(argumento) && !tabela_simbolo.teste_externo(argumento)){
 						throw invalid_argument ("Erro Semântico: Endereco de memoria nao reservado"); 
 					}
 					if (n_soma < 0){
@@ -601,9 +745,13 @@ namespace Montador{
 				}else {
 					throw invalid_argument ("Erro Sintático: Tipo de argumento inválido");
 				}
-			} 
+			}
+			if(tabela_simbolo.teste_externo(argumento))
+				tabela_de_uso.inserir_uso(argumento,endereco_uso+1);
 
 		}
+
+		endereco_uso+=tabela_instrucao.get_tamanho(instrucao);
 
 
 	}

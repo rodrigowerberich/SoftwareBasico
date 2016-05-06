@@ -10,12 +10,12 @@ SECTION TEXT
 		IF FLAG
 		DIV		DOIS
 		STORE		R
-		OUTPUT	R+1
+		OUTPUT	B + 1
 		SOMA R
 		STOP
 
 SECTION DATA
-	B :		space 2
+	B:		space 2
 	H :		SPACE 
 	r:		SPACE
 	DOIS:	CONST		2

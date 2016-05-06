@@ -40,7 +40,8 @@ private:
 	bool erro;
 	std::string rotulo_anterior;
 	std::string codigo;
-	int corretor_posicao; //Corrige a posicao dos tokens devido a tokens extras
+	int corretor_posicao;
+	int endereco_uso; //Corrige a posicao dos tokens devido a tokens extras
 
 
 	void tratar_EQU(Linha&);
