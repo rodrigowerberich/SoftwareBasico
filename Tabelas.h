@@ -43,7 +43,9 @@ class Tabela_Definicoes
 
 public:
 	void inserir_definicao (string rotulo, int endereco);
-
+	string get_simbolo_def (int posicao);
+	string get_endereco_def (int posicao);
+	
 private:
 	vector<string> rotulo;
 	vector<int> endereco;
@@ -56,6 +58,8 @@ class Tabela_Uso
 
 public:
 	void inserir_uso (string rotulo, int endereco);
+	string get_simbolo_uso (int posicao);
+	string get_endereco_uso (int posicao);
 
 private:
 	vector<string> rotulo;

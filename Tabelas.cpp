@@ -133,6 +133,30 @@ void Tabela_Definicoes::inserir_definicao (string simbolo, int valor){
 	rotulo.push_back(simbolo);
 	endereco.push_back(valor);
 }
+string Tabela_Definicoes::get_simbolo_def (int posicao){
+
+	if (posicao < rotulo.size()){
+
+		return rotulo[posicao];
+	}
+
+	return None;
+}
+
+string Tabela_Definicoes::get_endereco_def (int posicao){
+
+	int temp = 0;
+	if (posicao < rotulo.size()){
+		temp = endereco[posicao];
+		stringstream ss;
+		ss << temp;
+		string s_endereco = ss.str();
+
+		return s_endereco;
+	}
+
+	return None;
+}
 
 // Definicao dos métodos da classe Tabela_Uso
 
@@ -141,6 +165,32 @@ void Tabela_Uso::inserir_uso (string simbolo, int valor){
 	rotulo.push_back(simbolo);
 	endereco.push_back(valor);
 
+}
+
+
+string Tabela_Uso::get_simbolo_uso (int posicao){
+
+	if (posicao < rotulo.size()){
+
+		return rotulo[posicao];
+	}
+
+	return None;
+}
+
+string Tabela_Uso::get_endereco_uso (int posicao){
+
+	int temp = 0;
+	if (posicao < rotulo.size()){
+		temp = endereco[posicao];
+		stringstream ss;
+		ss << temp;
+		string s_endereco = ss.str();
+
+		return s_endereco;
+	}
+
+	return None;
 }
 
 void Tabela_EQU::inserir_equ(string simbolo, string value)
