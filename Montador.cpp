@@ -511,8 +511,8 @@ namespace Montador{
 
 	void Montador::codificar_instrucao(std::vector<Token> tokens){
 
-		string argumento, instrucao = tokens[0].get_str(); 
-		int endereco, opcode, operandos, soma;
+		string argumento, soma, instrucao = tokens[0].get_str(); 
+		int endereco, opcode, operandos;
 
 		if (instrucao == "JMP" || instrucao == "JMPN" || instrucao == "JMPP" || instrucao == "JMPZ"){
 
@@ -540,9 +540,10 @@ namespace Montador{
 
 			codigo += s_opcode;
 		}
+		// falta COPY
 		else if (instrucao == "COPY") {
 
-		}
+		} // Demais instrucoes, faltam casos de 1 token que tem + ou , ou outra coisa.
 		else {
 			operandos = tabela_instrucao.get_operandos(instrucao);
 
@@ -565,22 +566,42 @@ namespace Montador{
 			
 				codigo += s_opcode + " ";
 			
-			} else {
 
+			} else {
 				argumento = tokens[1].get_str();
 				endereco = tabela_simbolo.getvalor(argumento);
 				
 				if (tokens[2].get_str() == "+") {
+					
+					if (!tokens[3].is_numerico()){
+						throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
+					}
+
 					soma = tokens[3].get_str();
-				
-					if (atoi(soma) > tabela_simbolo.get_tamanho(argumento)){
-						throw invalid_argument ("Erro semântico: Endereco de memoria nao reservado"); 
+					int n_soma = atoi(soma.c_str());
+
+					if (n_soma >= tabela_simbolo.get_tamanho(argumento)){
+						throw invalid_argument ("Erro Semântico: Endereco de memoria nao reservado"); 
+					}
+					if (n_soma < 0){
+						throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
 					}
 
 					opcode = tabela_instrucao.get_opcode(instrucao); 
+					endereco = endereco + n_soma;
 
+					stringstream ss;
+					ss << opcode;
+					ss << " ";
+					ss << endereco;
+					string s_opcode = ss.str();
+				
+					codigo += s_opcode + " ";
+
+				}else {
+					throw invalid_argument ("Erro Sintático: Tipo de argumento inválido");
 				}
-			}
+			} 
 
 		}
 
