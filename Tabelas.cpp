@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -134,17 +135,17 @@ void Tabela_Definicoes::inserir_definicao (string simbolo, int valor){
 	endereco.push_back(valor);
 }
 string Tabela_Definicoes::get_simbolo_def (int posicao){
-
+	string nada;
 	if (posicao < rotulo.size()){
 
 		return rotulo[posicao];
 	}
 
-	return None;
+	return nada;
 }
 
 string Tabela_Definicoes::get_endereco_def (int posicao){
-
+	string nada;
 	int temp = 0;
 	if (posicao < rotulo.size()){
 		temp = endereco[posicao];
@@ -155,7 +156,7 @@ string Tabela_Definicoes::get_endereco_def (int posicao){
 		return s_endereco;
 	}
 
-	return None;
+	return nada;
 }
 
 // Definicao dos métodos da classe Tabela_Uso
@@ -169,17 +170,17 @@ void Tabela_Uso::inserir_uso (string simbolo, int valor){
 
 
 string Tabela_Uso::get_simbolo_uso (int posicao){
-
+	string nada;
 	if (posicao < rotulo.size()){
 
 		return rotulo[posicao];
 	}
 
-	return None;
+	return nada;
 }
 
 string Tabela_Uso::get_endereco_uso (int posicao){
-
+	string nada;
 	int temp = 0;
 	if (posicao < rotulo.size()){
 		temp = endereco[posicao];
@@ -190,7 +191,7 @@ string Tabela_Uso::get_endereco_uso (int posicao){
 		return s_endereco;
 	}
 
-	return None;
+	return nada;
 }
 
 void Tabela_EQU::inserir_equ(string simbolo, string value)
