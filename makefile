@@ -1,11 +1,15 @@
-OBJS = Buffer.o Linha.o Montador.o Tabelas.o Tabelas_montador.o Token.o SeparadorDeLinhas.o lerarquivo.o
+OBJS = Buffer.o Linha.o Montador.o Tabelas.o Tabelas_montador.o Token.o SeparadorDeLinhas.o montador.o
+OBJSL = Ligador.o ligador.o Buffer.o SeparadorDeLinhas.o Token.o Linha.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG)
 
-p1 : $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o p1
+montador : $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o montador
+
+ligador : $(OBJSL)
+	$(CC) $(LFLAGS) $(OBJSL) -o ligador
 
 Buffer.o : Buffer.h Buffer.cpp
 	$(CC) $(CFLAGS) Buffer.cpp
@@ -28,9 +32,14 @@ Token.o : Token.h Token.cpp
 SeparadorDeLinhas.o: SeparadorDeLinhas.h SeparadorDeLinhas.cpp Token.h
 	$(CC) $(CFLAGS) SeparadorDeLinhas.cpp
 
+montador.o : montador.c Montador.h
+	$(CC) $(CFLAGS) montador.c
 
-lerarquivo.o : lerarquivo.cpp Montador.h
-	$(CC) $(CFLAGS) lerarquivo.cpp
+Ligador.o: Ligador.h Ligador.cpp Buffer.h SeparadorDeLinhas.h Token.h Linha.h
+	$(CC) $(CFLAGS) Ligador.cpp
+
+ligador.o: ligador.c Ligador.h
+	$(CC) $(CFLAGS) ligador.c
 
 clean:
-	\rm *.o *~ p1
+	\rm *.o montador

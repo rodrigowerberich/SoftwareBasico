@@ -6,8 +6,7 @@
 
 namespace Montador{
 	Buffer::Buffer(std::string nome_arquivo){
-		std::string extensao = ".asm";
-		arquivo.open((nome_arquivo+extensao).c_str());
+		arquivo.open((nome_arquivo).c_str());
 	}
 
 	Buffer::~Buffer(){

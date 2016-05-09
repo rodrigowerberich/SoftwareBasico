@@ -16,8 +16,9 @@ using namespace std;
 
 namespace Montador{
 
-	Montador::Montador(std::string arquivo_dado){
+	Montador::Montador(std::string arquivo_dado,std::string saida_dada){
 		arquivo = arquivo_dado;
+		saida = saida_dada;
 		section_text = false;
 		section_data = false;
 		modulo = false;
@@ -31,7 +32,7 @@ namespace Montador{
 
 	void Montador::pre_processamento() 
 	{ 
-		Buffer b(arquivo);
+		Buffer b(arquivo+".asm");
 		SeparadorDeLinhas sep;
 		unsigned int num_linha = 1;
 		while(!b.fim()){
@@ -173,7 +174,54 @@ namespace Montador{
 				gerar_erro(ia,linha->get_numero());
 			} 	
 		}
-		cout << codigo<<endl;
+//		cout << codigo<<endl;
+//		cout << relativo<<endl;
+	}
+
+	void Montador::gerar_arquivo(){
+		if(!erro){
+			cout << saida << endl;
+			std::ofstream s_arquivo(string(saida+".o").c_str());
+			if (s_arquivo.is_open()){
+				if(!modulo){
+					s_arquivo << codigo << endl;
+				}else{
+					s_arquivo << "TABLE USE" << endl;
+					s_arquivo << gerar_tabela_uso();
+					s_arquivo << "TABLE DEFINITION" <<endl;
+					s_arquivo << gerar_tabela_definicao();
+					s_arquivo << "RELATIVE" <<endl;
+					s_arquivo << relativo <<endl<<endl;
+					s_arquivo << "CODE" <<endl;
+					s_arquivo << codigo << endl;
+				}
+			}
+			s_arquivo.close();
+		}
+	}
+
+	string Montador::gerar_tabela_uso(){
+		string rotulo = " ",endereco,uso;
+		int i = 0;
+		while(!rotulo.empty()){
+			rotulo = tabela_de_uso.get_simbolo_uso(i);
+			endereco = tabela_de_uso.get_endereco_uso(i);
+			uso += rotulo + " " + endereco+"\n";
+			i++;
+		}
+		return uso;
+	}
+
+	string Montador::gerar_tabela_definicao(){
+		string rotulo = " ",endereco,def;
+		int i = 0;
+		while(!rotulo.empty()){
+			rotulo = tabela_definicao.get_simbolo_def(i);
+			endereco = tabela_definicao.get_endereco_def(i);
+			def += rotulo + " " + endereco+"\n";
+			i++;
+		}
+		return def;
 	}
 
 	void Montador::tratar_EQU(Linha & linha){
@@ -526,6 +574,13 @@ namespace Montador{
 			if(tabela_simbolo.teste_externo(argumento))
 				tabela_de_uso.inserir_uso(argumento,endereco_uso+1);
 			
+			stringstream ss1;
+			ss1 << endereco_uso+1;
+			ss1 << " ";
+			string s_end = ss1.str();
+
+			relativo +=s_end;
+
 			endereco = tabela_simbolo.getvalor(argumento);	
 			if (!tabela_simbolo.teste_jump_valido(argumento)){
 				throw invalid_argument ("Erro Semântico: Pulo para rótulo inválido");
@@ -536,7 +591,7 @@ namespace Montador{
 			ss << " ";
 			ss << endereco;
 			string s_opcode = ss.str();
-			
+
 			codigo += s_opcode + " ";
 		}
 		else if (instrucao == "STOP"){
@@ -565,6 +620,8 @@ namespace Montador{
 				if ((tokens[2].is_numerico()) || (argumento2 == ",")|| (argumento2=="+") || (argumento2.at(argumento2.size()-1)==',')){
 					throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
 				}
+
+				argumento = argumento.substr(0,argumento.size()-1);
 
 				//cout << "Argumento 1: "<<argumento<< " Argumento 2: "<<argumento2<< " Soma: "<<soma<< " Soma 2: "<<soma2<<endl;
 
@@ -596,7 +653,8 @@ namespace Montador{
 						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
 					}
 					if(soma2.at(soma2.size()-1)==',')
-						throw invalid_argument ("Erro sintático: Estrutura inválida"); 
+						throw invalid_argument ("Erro sintático: Estrutura inválida");
+					argumento = argumento.substr(0,argumento.size()-1);
 
 
 				}else 
@@ -630,6 +688,12 @@ namespace Montador{
 			endereco2 = tabela_simbolo.getvalor(argumento2);
 			opcode = tabela_instrucao.get_opcode(instrucao);
 
+			if(tabela_simbolo.teste_jump_valido(argumento) && !tabela_simbolo.teste_externo(argumento))
+				throw invalid_argument("Erro Semântico: Operando com labels");
+
+			if(tabela_simbolo.teste_jump_valido(argumento2) && !tabela_simbolo.teste_externo(argumento2))
+				throw invalid_argument("Erro Semântico: Operando com labels");
+
 			if(tabela_simbolo.teste_constante(argumento2))
 				throw invalid_argument("Erro Semântico: Tentando mudar um valor constante");
 
@@ -648,7 +712,7 @@ namespace Montador{
 			if(!soma2.empty()){
 				int n_soma = atoi(soma2.c_str());
 
-				if (n_soma >= tabela_simbolo.get_tamanho(argumento) && !tabela_simbolo.teste_externo(argumento)){
+				if (n_soma >= tabela_simbolo.get_tamanho(argumento2) && !tabela_simbolo.teste_externo(argumento2)){
 					throw invalid_argument ("Erro Semântico: Endereco de memoria nao reservado"); 
 				}
 				if (n_soma < 0){
@@ -673,6 +737,16 @@ namespace Montador{
 			if(tabela_simbolo.teste_externo(argumento2))
 				tabela_de_uso.inserir_uso(argumento,endereco_uso+2);
 
+			stringstream ss1;
+			ss1 << endereco_uso+1;
+			ss1 << " ";
+			ss1 << endereco_uso+2;
+			ss1 << " ";
+			string s_end = ss1.str();
+
+			relativo +=s_end;
+
+
 		}
 		else {
 			operandos = tabela_instrucao.get_operandos(instrucao);
@@ -693,6 +767,10 @@ namespace Montador{
 
 				if(instrucao == "DIV" && tabela_simbolo.teste_const_zero(argumento))
 					throw invalid_argument("Erro Semântico: Divisao por zero");
+
+				if(tabela_simbolo.teste_jump_valido(argumento) && !tabela_simbolo.teste_externo(argumento))
+					throw invalid_argument("Erro Semântico: Operando com labels");
+
 
 				stringstream ss;
 				ss << opcode;
@@ -731,6 +809,10 @@ namespace Montador{
 						throw invalid_argument ("Erro Sintático: Tipo de argumento inválido"); 
 					}
 
+					if(tabela_simbolo.teste_jump_valido(argumento) && !tabela_simbolo.teste_externo(argumento))
+						throw invalid_argument("Erro Semântico: Operando com labels");
+
+
 					opcode = tabela_instrucao.get_opcode(instrucao); 
 					endereco = endereco + n_soma;
 
@@ -739,15 +821,24 @@ namespace Montador{
 					ss << " ";
 					ss << endereco;
 					string s_opcode = ss.str();
-				
+						
 					codigo += s_opcode + " ";
 
 				}else {
 					throw invalid_argument ("Erro Sintático: Tipo de argumento inválido");
 				}
 			}
+
 			if(tabela_simbolo.teste_externo(argumento))
 				tabela_de_uso.inserir_uso(argumento,endereco_uso+1);
+						stringstream ss1;
+
+			ss1 << endereco_uso+1;
+			ss1 << " ";
+			string s_end = ss1.str();
+
+			relativo +=s_end;
+
 
 		}
 

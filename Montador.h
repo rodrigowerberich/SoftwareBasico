@@ -15,13 +15,15 @@ namespace Montador{
 class Montador
 {
 public:
-	Montador(std::string);
+	Montador(std::string, std::string);
 	void pre_processamento();
 	void primeira_passagem();
 	void segunda_passagem();
+	void gerar_arquivo();
 
 private:
 	std::string arquivo;
+	std::string saida;
 	std::vector<Linha> linhas;
 	Tabela_EQU tabela_EQU;
 	Tabela_Simbolos tabela_simbolo;
@@ -40,6 +42,7 @@ private:
 	bool erro;
 	std::string rotulo_anterior;
 	std::string codigo;
+	std::string relativo;
 	int corretor_posicao;
 	int endereco_uso; //Corrige a posicao dos tokens devido a tokens extras
 
@@ -54,6 +57,8 @@ private:
 	void executar_instrucao(std::vector<Token> &,std::string,int &);
 	void codificar_instrucao(std::vector<Token> tokens_linha);
 	void gerar_erro(const std::invalid_argument&,int);
+	std::string gerar_tabela_uso();
+	std::string gerar_tabela_definicao();
 };
 
 
