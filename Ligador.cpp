@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "Token.h"
 #include "Linha.h"
+#include "Tabelas.h"
 #include <string>
 
 using namespace std;
@@ -16,6 +17,7 @@ namespace Montador{
 	void Ligador::ligar(){
 		obter_tokens(arquivo1,linhas1);
 		obter_tokens(arquivo2,linhas2);
+		decodificar_tokens(linhas1, tabela_de_uso1, tabela_de_definicao1, relativo1, codigo1);
 	}
 
 	void Ligador::obter_tokens(string arquivo,std::vector<Linha> linhas){
@@ -36,5 +38,7 @@ namespace Montador{
 			num_linha++;
 		}
 	}
+
+	void Ligador::decodificar_tokens(std::vector<Linha> linhas, )
 
 }

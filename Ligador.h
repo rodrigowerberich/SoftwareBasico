@@ -25,6 +25,7 @@ private:
 	std::string saida;
 	std::vector<Linha> linhas1;
 	std::vector<Linha> linhas2;
+	Tabela_Uso tabela_de_uso
 };
 
 

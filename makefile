@@ -1,5 +1,5 @@
 OBJS = Buffer.o Linha.o Montador.o Tabelas.o Tabelas_montador.o Token.o SeparadorDeLinhas.o montador.o
-OBJSL = Ligador.o ligador.o Buffer.o SeparadorDeLinhas.o Token.o Linha.o
+OBJSL = Ligador.o ligador.o Buffer.o SeparadorDeLinhas.o Token.o Linha.o Tabelas.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
@@ -35,7 +35,7 @@ SeparadorDeLinhas.o: SeparadorDeLinhas.h SeparadorDeLinhas.cpp Token.h
 montador.o : montador.c Montador.h
 	$(CC) $(CFLAGS) montador.c
 
-Ligador.o: Ligador.h Ligador.cpp Buffer.h SeparadorDeLinhas.h Token.h Linha.h
+Ligador.o: Ligador.h Ligador.cpp Buffer.h SeparadorDeLinhas.h Token.h Linha.h Tabelas.h
 	$(CC) $(CFLAGS) Ligador.cpp
 
 ligador.o: ligador.c Ligador.h
