@@ -1,3 +1,15 @@
+/*------------------------------------------------------------------------------------
+	Trabalho 1 - Software Básico 01/2016 - Turma B
+
+Nome: 	Letícia Helena Silva Porto 						11/0127846
+		Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
+
+Nome do arquivo: Tabelas_montador.cpp
+
+Descricao: Este arquivo contém a definicao dos métodos das classes Tabela_Instrucoes, que 
+armazena a tabela de instrucoes, e da classe Tabela_Diretivas, que armazena a tabela de 
+diretivas.
+----------------------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -86,6 +98,12 @@ Tabela_Instrucoes::Tabela_Instrucoes(){
 
 }
 
+/*
+Método da classe Tabela_Instrucoes
+Busca o opcode de uma instrucao,se ele nao existir ele acusa erro sintático
+Recebe: uma string que é nome da instrucao
+Retorna: o numero do opcode
+*/
 int Tabela_Instrucoes::get_opcode(string inst) throw (invalid_argument){
 
 	unsigned int i = 0;
@@ -103,6 +121,12 @@ int Tabela_Instrucoes::get_opcode(string inst) throw (invalid_argument){
 	return op;
 }
 
+/*
+Método da classe Tabela_Instrucoes
+Busca o número de operandos de uma instrucao
+Recebe: uma string que é nome da instrucao
+Retorna: a quantidade de operandos da instrucao
+*/
 int Tabela_Instrucoes::get_operandos(string inst){
 
 	unsigned int i = 0;
@@ -117,6 +141,12 @@ int Tabela_Instrucoes::get_operandos(string inst){
 	return num_operandos;
 }
 
+/*
+Método da classe Tabela_Instrucoes
+Busca o tamanho de uma instrucao
+Recebe: uma string que é nome da instrucao
+Retorna: o tamanho da instrucao
+*/
 int Tabela_Instrucoes::get_tamanho(string inst){
 
 	unsigned int i = 0;
@@ -131,6 +161,12 @@ int Tabela_Instrucoes::get_tamanho(string inst){
 	return tamanho_inst;
 }
 
+/*
+Método da classe Tabela_Instrucoes
+Verifica se a instrucao é valida, ou seja, se ela existe na tabela
+Recebe: uma string que é nome da instrucao
+Retorna: um booleano que fala se a instrucao existe ou nao
+*/
 bool Tabela_Instrucoes::teste_instrucao(string inst){
 
 	unsigned int i = 0;
@@ -149,6 +185,11 @@ bool Tabela_Instrucoes::teste_instrucao(string inst){
 		return false;
 }
 
+/*
+Construtor da classe Tabela_Diretivas
+Cria um objeto Tabela_Diretivas e cria a tabela de diretivas do Assembler inventado, incluindo informacoes como
+numero de operandos e o tamanho em bytes que será ocupado pela diretiva
+*/
 Tabela_Diretivas::Tabela_Diretivas(){
 
 	diretiva.push_back("SECTION");
@@ -189,7 +230,12 @@ Tabela_Diretivas::Tabela_Diretivas(){
 
 }
 
-
+/*
+Método da classe Tabela_Diretivas
+Busca o número de operandos de uma diretiva
+Recebe: uma string que é nome da diretiva
+Retorna: a quantidade de operandos da diretiva
+*/
 int Tabela_Diretivas::get_operandos(string dir){
 
 	unsigned int i = 0;
@@ -204,6 +250,12 @@ int Tabela_Diretivas::get_operandos(string dir){
 	return num_operandos;
 }
 
+/*
+Método da classe Tabela_Diretivas
+Busca o tamanho de uma diretiva
+Recebe: uma string que é nome da diretiva
+Retorna: o tamanho da diretiva
+*/
 int Tabela_Diretivas::get_tamanho(string dir){
 
 	unsigned int i = 0;
@@ -218,6 +270,12 @@ int Tabela_Diretivas::get_tamanho(string dir){
 	return tamanho_dir;
 }
 
+/*
+Método da classe Tabela_Diretivas
+Verifica se a diretiva é valida, ou seja, se ela existe na tabela
+Recebe: uma string que é nome da diretiva
+Retorna: um booleano que fala se a diretiva existe ou nao
+*/
 bool Tabela_Diretivas::teste_diretiva(string dir){
 
 	unsigned int i = 0;
