@@ -21,10 +21,11 @@ Descricao: Esqueleto das classes Tabela_Simbolos, Tabela_Definicoes, Tabela_Uso 
 
 using namespace std;
 
-	namespace Montador {
+namespace Montador {
+
 	/* Definicao da Classe Tabela_Simbolos
 	   Armazena os rótulos contidos no programa, seu endereco, seu tamanho reservado, caso seja um vetor,
-	   se o rótulo é um argumento externo, se o é uma constante, se é um endereco de jump válido
+	   se o rótulo é um argumento externo, se é uma constante, se é um endereco de jump válido
 	   e se o rótulo é igual a zero.
 	   Possui métodos que retornam essas informacoes sobre um determinado rótulo do programa.
 	*/

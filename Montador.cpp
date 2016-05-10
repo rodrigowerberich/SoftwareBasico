@@ -180,7 +180,7 @@ namespace Montador{
 	}
 
 	/* Método da classe Montador
-	Gera o arquivo de saida.
+	Gera o arquivo de saida, caso nao encontre nenhum erro léxico, sintático ou semantico.
 	Caso nao seja um módulo, copia o código gerado pro arquivo.
 	Caso seja um modulo, gera as tabelas de uso e de definicao, atraves dos métodos gerar_tabela_uso e 
 	gerar_tabela_definicao e escreve os enderecos relativos no arquivo final.
