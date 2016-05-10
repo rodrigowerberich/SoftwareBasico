@@ -6,7 +6,8 @@ Nome: 	Letícia Helena Silva Porto 						11/0127846
 
 Nome do arquivo: Tabelas.h
 
-Descricao: Esqueleto da classe Montador
+Descricao: Esqueleto da classe Montador, que realiza o pre-processamento, primeira e segunda 
+passagem do código de entrada e gera o arquivo de saída com o código final em formato .o
 ----------------------------------------------------------------------------------------*/
 
 #ifndef SB_MONTADOR
