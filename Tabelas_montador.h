@@ -1,5 +1,15 @@
-#ifndef Tabelas_montador_h
-#define Tabelas_montador_h
+/*------------------------------------------------------------------------------------
+	Trabalho 1 - Software Básico 01/2016 - Turma B
+
+Nome: 	Letícia Helena Silva Porto 						11/0127846
+		Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
+
+Nome do arquivo: Tabelas_montador.h
+
+Descricao: Esqueleto da classes Tabela_Instrucoes, que faz a verificacao lexica de uma string.
+----------------------------------------------------------------------------------------*/
+#ifndef SB_TABELAS_MONTADOR
+#define SB_TABELAS_MONTADOR
 
 #include <iostream>
 #include <stdexcept>
@@ -43,4 +53,4 @@ private:
 
 };
 
-#endif
+#endif /* SB_TABELAS_MONTADOR */

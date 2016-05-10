@@ -17,6 +17,7 @@ possa pegar linha a linha o seu conteúdo.
 #include <fstream>
 
 namespace Montador {
+	
 	/*
 	Classe Buffer
 	Abre um arquivo, o mantem aberto para que se possa pegar linha a linha o seu conteúdo.

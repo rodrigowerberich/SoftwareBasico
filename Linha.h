@@ -18,20 +18,32 @@ texto escrito, separando-a em tokens e mantendo uma referência ao número da li
 
 namespace Montador{
 
-class Linha
-{
-public:
-	Linha(std::vector<Token>,int);
-	//~Linha();
-	std::vector<Token> get_tokens(){return tokens;};
-	int get_numero() const{return numero;};
-	void substituir_token(string,int);
-	void remover_rotulo();
-	
-private:
-	std::vector<Token> tokens;
-	int numero;
-};
+	/*
+	Classe Linha
+	Armazena o conteudo de uma linha original do texto escrito, separando-a em tokens e 
+	mantendo uma referência ao número da linha.
+	*/
+	class Linha
+	{
+	public:
+		// Contrutor
+		Linha(std::vector<Token>,int);
+
+		// Métodos da classe
+		void substituir_token(string,int);
+		void remover_rotulo();
+
+		// Getters da classe
+		std::vector<Token> get_tokens(){return tokens;};
+		int get_numero() const{return numero;};
+
+		
+	private:
+		// Os tokens que a linha contém
+		std::vector<Token> tokens;
+		// O número da linha
+		int numero;
+	};
 
 } // namespace Montador
 #endif /* SB_LINHA */
