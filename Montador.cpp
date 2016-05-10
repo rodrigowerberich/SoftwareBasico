@@ -181,7 +181,10 @@ namespace Montador{
 	void Montador::gerar_arquivo(){
 		if(!erro){
 			cout << saida << endl;
-			std::ofstream s_arquivo(string(saida+".o").c_str());
+			if(modulo)
+				std::ofstream s_arquivo(string(saida+".o").c_str());
+			else 
+				std::ofstream s_arquivo(string(saida+".e").c_str());
 			if (s_arquivo.is_open()){
 				if(!modulo){
 					s_arquivo << codigo << endl;

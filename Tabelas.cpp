@@ -130,6 +130,8 @@ bool Tabela_Simbolos::teste_const_zero(string simbolo){
 
 
 void Tabela_Definicoes::inserir_definicao (string simbolo, int valor){
+	if(-1!=get_endereco_def(simbolo))
+		throw invalid_argument("Erro léxico: Redefinicao do label "+simbolo);
 
 	rotulo.push_back(simbolo);
 	endereco.push_back(valor);
@@ -157,6 +159,16 @@ string Tabela_Definicoes::get_endereco_def (int posicao){
 	}
 
 	return nada;
+}
+
+int Tabela_Definicoes::get_endereco_def(string simbolo){
+	unsigned int i;
+
+	for (i=0; i< rotulo.size(); i++){
+		if (rotulo[i] == simbolo)
+			return endereco[i];
+	}
+	return -1;
 }
 
 // Definicao dos métodos da classe Tabela_Uso

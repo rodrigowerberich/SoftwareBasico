@@ -45,6 +45,7 @@ public:
 	void inserir_definicao (string rotulo, int endereco);
 	string get_simbolo_def (int posicao);
 	string get_endereco_def (int posicao);
+	int get_endereco_def(string rotulo);
 	
 private:
 	vector<string> rotulo;

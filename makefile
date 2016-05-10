@@ -1,5 +1,5 @@
 OBJS = Buffer.o Linha.o Montador.o Tabelas.o Tabelas_montador.o Token.o SeparadorDeLinhas.o montador.o
-OBJSL = Ligador.o ligador.o Buffer.o SeparadorDeLinhas.o Token.o Linha.o Tabelas.o
+OBJSL = Ligador.o ligador.o Buffer.o SeparadorDeLinhas.o Token.o Linha.o Tabelas.o Tabelas_montador.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
