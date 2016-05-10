@@ -7,6 +7,11 @@
 
 using namespace std;
 
+/*
+Construtor da classe Tabela de instrucoes
+Cria um objeto Tabela_Instrucoes e cria a tabela de instrucoes do Assembler inventado, incluindo informacoes como
+opcode, numero de operandos e o tamanho em bytes que será ocupado pela instrucao
+*/
 Tabela_Instrucoes::Tabela_Instrucoes(){
 
 	instrucao.push_back("ADD");
