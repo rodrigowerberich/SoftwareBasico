@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 namespace Montador{
@@ -166,6 +167,12 @@ namespace Montador{
 		for(i=0;i<codigo2.size();i++)
 			cout << codigo2[i] << " ";
 		cout << endl;
+
+		for (i=0;i<relativo2.size();i++){
+			cout << relativo2[i] << " ";
+		}
+		cout <<endl;
+
 		i=0;
 		rotulo = " ";
 		while(!rotulo.empty()){
@@ -176,6 +183,7 @@ namespace Montador{
 				posicao = tabela_geral_definicao.get_endereco_def(rotulo);
 				cout <<"Posicao "<< posicao << endl;
 				if(posicao>-1){
+					relativo2.erase(std::remove(relativo2.begin(), relativo2.end(), atoi(endereco.c_str())), relativo2.end());
 					stringstream ss;
 					ss << posicao+atoi(codigo2[atoi(endereco.c_str())].c_str());
 					string s_posicao = ss.str();
@@ -185,6 +193,12 @@ namespace Montador{
 			}
 			i++;
 		}
+
+		for (i=0;i<relativo2.size();i++){
+			cout << relativo2[i] << " ";
+		}
+		cout <<endl;
+
 		for (i=0;i<relativo2.size();i++){
 			stringstream ss;
 			ss<< atoi(codigo2[relativo2[i]].c_str()) + codigo1.size();
