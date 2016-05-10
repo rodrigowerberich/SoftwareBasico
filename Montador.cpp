@@ -1,3 +1,15 @@
+/*------------------------------------------------------------------------------------
+	Trabalho 1 - Software Básico 01/2016 - Turma B
+
+Nome: 	Letícia Helena Silva Porto 						11/0127846
+		Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
+
+Nome do arquivo: Montador.cpp
+
+Descricao: Este arquivo contém a definicao dos métodos da classe Montador, que realiza as 
+etapas de pre-processamento, primeira passagem, segunda passagem e geracao do arquivo de saida.
+----------------------------------------------------------------------------------------*/
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -16,6 +28,10 @@ using namespace std;
 
 namespace Montador{
 
+	/* Construtor da classe Montador
+	Inicializa os atributos da classe Montador.
+	Parâmetros: arquivo de entrada e arquivo de saída.
+	*/
 	Montador::Montador(std::string arquivo_dado,std::string saida_dada){
 		arquivo = arquivo_dado;
 		saida = saida_dada;
@@ -30,6 +46,13 @@ namespace Montador{
 		endereco_uso = 0;
 	}
 
+	/* Método da classe Montador
+	Realiza o pre-processamento do programa em Assembly inventado.
+	Analisa linha a linha, com o auxílio da classe Linha.
+	Separa os Tokens de cada linha, utilizando o método separar_linhas da classe SeparadorDeLinhas
+	e armazena-os em um objeto da classe Token.
+	Faz o tratamento de EQU.
+	*/
 	void Montador::pre_processamento() 
 	{ 
 		Buffer b(arquivo+".asm");
@@ -49,34 +72,28 @@ namespace Montador{
 			}
 			num_linha++;
 		}
-		// for (unsigned int i=0;i<linhas.size();i++){
-		// 	std::vector<Token> tokens = linhas[i].get_tokens();
-		// 	for(unsigned int j=0;j<tokens.size();j++){
-		// 		cout << tokens[j].get_str()<<" ";
-		// 	}
-		// 	cout << endl;
-		// }
 	}
 	
-
-	// Montar tabela de símbolos
-	// verificar se instrucoes sao válidas
-	// verificar se diretivas sao validas, caso válida, executa-la
-	// verificar se sessoes do codigo sao validas
+	/* Método da classe Montador
+	Realiza a primeira passagem do Montador.
+	Identifica os rótulos, diretivas e instrucoes do código de entrada através de outros métodos
+	da classe Montador (identificar_rotulo, identificar_diretiva e identificar_instrucao).
+	Verifica se as secoes do código de entrada foram declaradas corretamente.
+	E verifica se as declaracoes das diretivas e das instrucoes possuem o numero de argumentos corretos
+	e estao na secao correta.
+	*/
 	void Montador::primeira_passagem(){
-
 		int endereco = 0;
 		string rotulo;
 		std::vector<vector<Linha>::iterator> linhas_removidas;
 		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
-
 			vector<Token> tokens_linha = linha->get_tokens();
 			corretor_posicao = 0;
 			linha_processada = false;
 			if(!ignorar_linha){
 				try {
 					rotulo = identificar_rotulo(tokens_linha);
-
+					
 					if(!rotulo.empty())
 						linha->remover_rotulo();
 					
@@ -98,8 +115,6 @@ namespace Montador{
 							rotulo = rotulo_anterior;
 						rotulo_sozinho = false;
 					}
-
-					//cout << rotulo << endl;
 					if(!rotulo_sozinho){
 						if(identificar_diretiva(tokens_linha))
 							executar_diretiva(tokens_linha,rotulo,endereco);
@@ -113,22 +128,13 @@ namespace Montador{
 						linha_processada = true;
 					if(linha_processada)
 						linhas_removidas.push_back(linha);
-					// if (tabela_diretiva.teste_diretiva(tokens_linha[1+corretor_posicao].get_str())){
-					// 	cout <<tokens_linha[1+corretor_posicao].get_str() <<" é uma diretiva" << endl;
-					// }else if(tabela_instrucao.teste_instrucao(tokens_linha[1+corretor_posicao].get_str())){
-					// 	cout <<tokens_linha[1+corretor_posicao].get_str() <<" é uma instrucao" << endl;
-					// }else{
-					// 	cout <<tokens_linha[1+corretor_posicao].get_str() << " nao é nada"<<endl;
-					// }
-
+				
 				}catch(const std::invalid_argument& ia){
 					linhas_removidas.push_back(linha);
 					gerar_erro(ia,linha->get_numero());
 				}
 			}else{
-				//linhas.erase(linha);
-				//linhas.erase(linha-1);
-				//linhas_removidas.push_back(linha-1);
+			
 				linhas_removidas.push_back(linha);
 				ignorar_linha = false;
 			}
@@ -141,7 +147,6 @@ namespace Montador{
 			cout << "Erro Semântico: Secao TEXT faltante" << endl;
 			erro = true;
 		}
-			//throw invalid_argument("Erro Semântico: Secao TEXT faltante");
 		if(modulo_aberto){
 			cout << "Erro Semântico: Diretiva BEGIN sem uma END" << endl;
 			erro = true;
@@ -150,16 +155,14 @@ namespace Montador{
 			cout << "Erro Semântico: Falta pelo menos um STOP, e nao é modulo "<<endl;
 			erro =true;
 		}
-			//throw invalid_argument("Erro Semântico: Diretiva END faltando");
-		// for (unsigned int i=0;i<linhas.size();i++){
-		// 	std::vector<Token> tokens = linhas[i].get_tokens();
-		// 	for(unsigned int j=0;j<tokens.size();j++){
-		// 		cout << tokens[j].get_str()<<" ";
-		// 	}
-		// 	cout << endl;
-		// }
 	}
 
+	/* Método da classe Montador
+	Realiza a segunda passagem do Montador.
+	Identifica as diretivas e instrucoes do código de entrada através de outros métodos
+	da classe Montador (identificar_diretiva e identificar_instrucao).
+	Codifica o programa inicial com o auxilio dos métodos codificar_diretiva e codificar_instrucao.
+	*/
 	void Montador::segunda_passagem(){
 		for(vector<Linha>::iterator linha = linhas.begin(); linha!=linhas.end(); ++linha) {
 			vector<Token> tokens_linha = linha->get_tokens();
@@ -174,10 +177,14 @@ namespace Montador{
 				gerar_erro(ia,linha->get_numero());
 			} 	
 		}
-//		cout << codigo<<endl;
-//		cout << relativo<<endl;
 	}
 
+	/* Método da classe Montador
+	Gera o arquivo de saida.
+	Caso nao seja um módulo, copia o código gerado pro arquivo.
+	Caso seja um modulo, gera as tabelas de uso e de definicao, atraves dos métodos gerar_tabela_uso e 
+	gerar_tabela_definicao e escreve os enderecos relativos no arquivo final.
+	*/
 	void Montador::gerar_arquivo(){
 		if(!erro){
 			cout << saida << endl;
@@ -200,6 +207,12 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Retorna uma string com a tabela de uso para escrever no arquivo de saida.
+	Gera tabela de uso pro arquivo final.
+	Caso seja um módulo, gera a tabela de uso em uma string, que estava armazenada 
+	em um objeto da classe Tabela_Uso.
+	*/
 	string Montador::gerar_tabela_uso(){
 		string rotulo = " ",endereco,uso;
 		int i = 0;
@@ -212,6 +225,12 @@ namespace Montador{
 		return uso;
 	}
 
+	/* Método da classe Montador
+	Retorna uma string com a tabela de definicoes para escrever no arquivo de saida.
+	Gera tabela de definicoes pro arquivo final.
+	Caso seja um módulo, gera a tabela de definicoes em uma string, que estava armazenada 
+	em um objeto da classe Tabela_Definicoes.
+	*/
 	string Montador::gerar_tabela_definicao(){
 		string rotulo = " ",endereco,def;
 		int i = 0;
@@ -224,6 +243,10 @@ namespace Montador{
 		return def;
 	}
 
+	/* Método da classe Montador
+	Recebe um objeto da classe Linha, que contem todas as linhas do arquivo.
+	É chamada no pre-processamento para tratar as EQU.
+	*/
 	void Montador::tratar_EQU(Linha & linha){
 		vector<Token> tokens_linha = linha.get_tokens();
 		string rotulo, valor, s_token;
@@ -234,17 +257,12 @@ namespace Montador{
 		for(unsigned int i=0;i<tokens_linha.size();i++){
 			dois_pontos = false;
 			s_token = tokens_linha[i].get_str();
-			//cout << "S token "<<s_token << endl;
 			valor = tabela_EQU.pegar_equ(s_token);
-			//cout << "Valor antes " << valor << " Vazio? ";
-			//cout << valor.empty() << " dois pontos "<< dois_pontos<<endl;
 			if(valor.empty()){
 				valor = tabela_EQU.pegar_equ(s_token.substr(0,s_token.size()-1));
 				dois_pontos = true;
 			}
 			if(!valor.empty()){
-				//cout << "Valor "<<valor << " ";
-				//cout << dois_pontos << endl;
 				if(dois_pontos){
 					linha.substituir_token(valor+string(":"),i);
 				}else{
@@ -265,27 +283,26 @@ namespace Montador{
 		}
 		if(equ){
 			rotulo = tokens_linha[0].get_str().substr(0,tokens_linha[0].get_str().size()-1);
-			//cout << rotulo << endl;
 			if(tokens_linha.size() > (2+corretor_posicao)){
 				valor = tokens_linha[2+corretor_posicao].get_str();
-				//cout << valor << endl;
 				tabela_EQU.inserir_equ(rotulo, valor);
 			}
 		}
 	}
 
+	/* Método da classe Montador
+	Argumentos recebidos: O vetor de tokens de uma determinada linha
+	Retorna: uma string que seria o rotulo da linha
+	Identifica se o primeiro token da linha é um rótulo e caso seja, se é uma label válida.
+	*/
 	std::string Montador::identificar_rotulo(std::vector<Token> & tokens){
 		string rotulo;
 		if (tokens[0].verifica_rotulo()) {
 			rotulo = tokens[0].get_str().substr(0,tokens[0].get_str().size()-1);
-			//tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
-			//cout << rotulo<<endl;
 		}else if(tokens.size() > 1){
 			if(tokens[1].get_str() == string(":")) {
 				rotulo = tokens[0].get_str();
 				corretor_posicao++;
-				//tabela_simbolo.inserir_simbolo(rotulo,endereco,false);
-				//cout << rotulo<<endl;
 			}else{
 				corretor_posicao--;
 			}
@@ -301,6 +318,11 @@ namespace Montador{
 		return rotulo;
 	}
 
+	/* Método da classe Montador
+	Argumento recebido: um vetor de objetos da classe tokens de uma determinada linha.
+	Procura na tabela de diretivas se a linha contem um token que é uma diretiva válida e
+	retorna um boleano que indica se a linha contem uma diretiva válida.
+	*/
 	bool Montador::identificar_diretiva(std::vector<Token> & tokens){
 		string diretiva = tokens[1+corretor_posicao].get_str();
 		if (tabela_diretiva.teste_diretiva(diretiva)){
@@ -310,6 +332,14 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: o vetor de tokens de uma determinada linha, o rotulo dessa linha e o endereco.
+	É um método utilizado na primeira passagem, que verifica se as diretivas utilizadas no programa 
+	estao com o número correto de argumentos e se estao na secao correta.
+	Verifica também se as diretivas que obrigatoriamente tem que ter uma label antes sao precedidas 
+	por labels.
+	Nesse método coloca-se as labels que indicam uma diretiva na tabela de símbolos.
+	*/
 	void Montador::executar_diretiva(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string diretiva = tokens[1+corretor_posicao].get_str();
 		if (diretiva == "SECTION"){
@@ -322,10 +352,6 @@ namespace Montador{
 				throw invalid_argument("Erro Semântico: SECTION apos o END");
 			diretiva_section(tokens[2+corretor_posicao].get_str());
 		}else if (diretiva == "SPACE"){
-			// if(!rotulo.empty()){
-			// 	tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false);
-			// 	cout << rotulo << " " << endereco << endl;
-			// }
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: SPACE apos o END");
 			if (!section_data)
@@ -426,8 +452,6 @@ namespace Montador{
 			}else if(argumento != "1"){
 				throw invalid_argument("Erro sintático: argumento inválido");
 			}
-			//int n_argumento = atoi(argumento.c_str());
-			//cout << "argumento " << n_argumento << endl;
 		}
 		unsigned int num_op = tabela_diretiva.get_operandos(diretiva);
 		if(diretiva == "SPACE"){
@@ -459,6 +483,11 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Argumento de entrada: vetor de tokens de uma determinada linha.
+	Procura na tabela de instrucoes se a linha contem um token que é uma instrucao válida e
+	retorna um boleano que indica se a linha contem uma instrucao válida.
+	*/
 	bool Montador::identificar_instrucao(std::vector<Token> & tokens){
 		string instrucao = tokens[1+corretor_posicao].get_str();
 		if (tabela_instrucao.teste_instrucao(instrucao)){
@@ -468,6 +497,12 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: o vetor de tokens de uma determinada linha, o rotulo dessa linha e o endereco.
+	É um método utilizado na primeira passagem, que verifica se as instrucoes utilizadas no programa 
+	estao com o número correto de argumentos e se estao na secao correta.
+	Nesse método coloca-se as labels que precedem uma instrucao na tabela de símbolos.
+	*/
 	void Montador::executar_instrucao(std::vector<Token> & tokens,string rotulo, int & endereco){
 		string instrucao = tokens[1+corretor_posicao].get_str();
 		if(!rotulo.empty()){
@@ -492,7 +527,6 @@ namespace Montador{
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
 			}
 		}else{
-			//cout << "num op "<< num_op +2 << " OUtro " << (tokens.size()-(2+corretor_posicao)) <<endl;
 			if(num_op!=tokens.size()-(2+corretor_posicao) && (num_op+2)!=(tokens.size()-(2+corretor_posicao))){
 				throw invalid_argument("Erro Sintático: Número incorreto de argumentos");
 			}
@@ -500,15 +534,25 @@ namespace Montador{
 		endereco += tabela_instrucao.get_tamanho(instrucao);
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: o número da linha que vai gerar o erro, o argumento que gera a execao
+	Esse método captura as execoes geradas durante a execucao da classe Montador e exibe no terminal
+	os erros indicando em qual linha do programa jele aconteceu.
+	*/
 	void Montador::gerar_erro(const std::invalid_argument& ia,int num_linha){
 		stringstream ss;
 		ss << num_linha;
 		string s_num_linha = ss.str();
-		erro = true;
-		//throw std::invalid_argument(std::string(" Linha ")+s_num_linha+string(": ")+ia.what());		
+		erro = true;		
 		std::cout << std::string(" Linha ")+s_num_linha+std::string(": ")+ia.what() << std::endl;
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: string que indica qual o tipo de section ser tratada.
+	É utilizada no método "executar_diretiva" e verifica se as secoes TEXT e DATA estao na ordem correta
+	no programa de entrada.
+	Verifica tambem se a secao definida é uma secao válida.	
+	*/	
 	void Montador::diretiva_section(string argumento){
 		if (argumento == "TEXT"){
 			if(section_text){
@@ -531,6 +575,15 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: o vetor de tokens de uma determinada linha.
+	É um método utilizado na segunda passagem. 
+	Cria a tabela de definicao, para os argumentos declarados como PUBLIC.
+	Codifica a diretiva SPACE, calculando o espaco de memória reservado para cada label e escreve
+	o codigo correspondente na string "codigo".
+	Codifica a diretiva CONST, verificando se o argumento dela é um numero ou nao é válido e escreve
+	o código na string "codigo".
+	*/
 	void Montador::codificar_diretiva(std::vector<Token> tokens){
 		
 		string argumento, diretiva = tokens[0].get_str(); 
@@ -541,7 +594,6 @@ namespace Montador{
 			argumento = tokens[1].get_str();
 			endereco = tabela_simbolo.getvalor(argumento);	
 			tabela_definicao.inserir_definicao(argumento,endereco);
-			cout << argumento << " entrou " <<endereco<<endl;
 			
 		}
 		else if(diretiva == "SPACE") {
@@ -563,10 +615,20 @@ namespace Montador{
 		}
 	}
 
+	/* Método da classe Montador
+	Argumentos de entrada: o vetor de tokens de uma determinada linha.
+	É um método utilizado na segunda passagem. 
+	Codifica todas as instrucoes estabelecidas para o Assembly inventado, analisando se a estrutura
+	da linha que contem a instrucao é sintaticamente e semanticamente válida, ou seja, confere se os
+	argumentos dados sao válidos sintaticamente e semanticamente.
+	Escreve o código gerado de cada instrucao na string "codigo".
+	*/
 	void Montador::codificar_instrucao(std::vector<Token> tokens){
 
 		string argumento, soma, instrucao = tokens[0].get_str(); 
 		int endereco, opcode, operandos;
+
+		// Se a instrucao for um tipo de JUMP, verifica se o endereco de pulo é válido
 
 		if (instrucao == "JMP" || instrucao == "JMPN" || instrucao == "JMPP" || instrucao == "JMPZ"){
 			argumento = tokens[1].get_str();
@@ -594,6 +656,7 @@ namespace Montador{
 
 			codigo += s_opcode + " ";
 		}
+		// Para a instrucao STOP, pega o opcode na tabela de instrucao e escreve o codigo.
 		else if (instrucao == "STOP"){
 
 			opcode = tabela_instrucao.get_opcode(instrucao);
@@ -604,7 +667,10 @@ namespace Montador{
 
 			codigo += s_opcode;
 		}
-		// falta COPY, nao copiar para variaveis constantes
+		/* Para o COPY, verifica-se se os argumentos sao válidos, nao sao labels que apontam para instrucoes
+		   e estao definidos na tabela_simbolos, verifica-se tambem se o endereco a receber a cópia 
+		   nao é uma constante, após isso, escreve o código.
+		*/
 		else if (instrucao == "COPY") {
 			string argumento2,soma2;
 			int endereco2;
@@ -623,9 +689,6 @@ namespace Montador{
 
 				argumento = argumento.substr(0,argumento.size()-1);
 
-				//cout << "Argumento 1: "<<argumento<< " Argumento 2: "<<argumento2<< " Soma: "<<soma<< " Soma 2: "<<soma2<<endl;
-
-
 			}else if(operandos+2 == (tokens.size() - 1)){
 				if(tokens[2].get_str() == "+" && tokens[3].get_str() != "+"){
 					argumento = tokens[1].get_str();
@@ -640,8 +703,6 @@ namespace Montador{
 					if(soma.at(soma.size()-1)!=',')
 						throw invalid_argument ("Erro sintático: Estrutura inválida"); 
 
-
-
 				}else if(tokens[2].get_str() != "+" && tokens[3].get_str() == "+"){
 					argumento = tokens[1].get_str();
 					argumento2 = tokens[2].get_str();
@@ -655,7 +716,6 @@ namespace Montador{
 					if(soma2.at(soma2.size()-1)==',')
 						throw invalid_argument ("Erro sintático: Estrutura inválida");
 					argumento = argumento.substr(0,argumento.size()-1);
-
 
 				}else 
 					throw invalid_argument("Erro sintático: Estrutura inválida");
@@ -680,7 +740,7 @@ namespace Montador{
 					throw invalid_argument ("Erro sintático: Estrutura inválida");
 				if(soma2.at(soma2.size()-1)==',')
 					throw invalid_argument ("Erro sintático: Estrutura inválida"); 
-				//cout << "Argumento 1: "<<argumento<< " Argumento 2: "<<argumento2<< " Soma: "<<soma<< " Soma 2: "<<soma2<<endl;
+
 			}else{
 				throw invalid_argument ("Erro sintático: Estrutura inválida");
 			}
@@ -746,8 +806,11 @@ namespace Montador{
 
 			relativo +=s_end;
 
-
 		}
+		/* Para demais instrucoes, verifica-se se o argumento está definido na tabela de símbolos
+		 se ele é uma constante ou uma label que aponta para uma instrucao.
+		 Escreve-se o código na string "codigo".
+		 */ 
 		else {
 			operandos = tabela_instrucao.get_operandos(instrucao);
 
@@ -771,7 +834,6 @@ namespace Montador{
 				if(tabela_simbolo.teste_jump_valido(argumento) && !tabela_simbolo.teste_externo(argumento))
 					throw invalid_argument("Erro Semântico: Operando com labels");
 
-
 				stringstream ss;
 				ss << opcode;
 				ss << " ";
@@ -779,14 +841,12 @@ namespace Montador{
 				string s_opcode = ss.str();
 			
 				codigo += s_opcode + " ";
-			
 
 			} else {
 				argumento = tokens[1].get_str();
 				endereco = tabela_simbolo.getvalor(argumento);
 				
 				if (tokens[2].get_str() == "+") {
-
 
 					if ((tokens[1].is_numerico()) || (argumento == ",")|| (argumento=="+") || (argumento.at(argumento.size()-1)==',')){
 						throw invalid_argument ("Erro sintático: Tipo de argumento inválido"); 
@@ -811,7 +871,6 @@ namespace Montador{
 
 					if(tabela_simbolo.teste_jump_valido(argumento) && !tabela_simbolo.teste_externo(argumento))
 						throw invalid_argument("Erro Semântico: Operando com labels");
-
 
 					opcode = tabela_instrucao.get_opcode(instrucao); 
 					endereco = endereco + n_soma;
@@ -838,12 +897,7 @@ namespace Montador{
 			string s_end = ss1.str();
 
 			relativo +=s_end;
-
-
 		}
-
 		endereco_uso+=tabela_instrucao.get_tamanho(instrucao);
-
-
 	}
 }
