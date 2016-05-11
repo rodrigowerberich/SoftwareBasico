@@ -20,7 +20,7 @@ diretivas.
 using namespace std;
 
 /*
-Construtor da classe Tabela de instrucoes
+Construtor da classe Tabela_Instrucoes
 Cria um objeto Tabela_Instrucoes e cria a tabela de instrucoes do Assembler inventado, incluindo informacoes como
 opcode, numero de operandos e o tamanho em bytes que será ocupado pela instrucao
 */
