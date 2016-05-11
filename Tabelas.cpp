@@ -4,7 +4,7 @@
 Nome: 	Letícia Helena Silva Porto 						11/0127846
 		Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
 
-Nome do arquivo: Tabelas.h
+Nome do arquivo: Tabelas.cpp
 
 Descricao: Este arquivo contém a definicao dos métodos das classes Tabela_Simbolos, 
 Tabela_Definicoes, Tabela_Uso e Tabela_EQU.

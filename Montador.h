@@ -4,7 +4,7 @@
 Nome: 	Letícia Helena Silva Porto 						11/0127846
 		Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
 
-Nome do arquivo: Tabelas.h
+Nome do arquivo: Montador.h
 
 Descricao: Esqueleto da classe Montador, que realiza o pre-processamento, primeira e segunda 
 passagem do código de entrada e gera o arquivo de saída com o código final em formato .o
