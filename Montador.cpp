@@ -187,7 +187,6 @@ namespace Montador{
 	*/
 	void Montador::gerar_arquivo(){
 		if(!erro){
-			cout << saida << endl;
 			std::ofstream s_arquivo(string(saida+".o").c_str());
 			if (s_arquivo.is_open()){
 				if(!modulo){
@@ -346,7 +345,6 @@ namespace Montador{
 			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true,false);
-				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: SECTION apos o END");
@@ -368,7 +366,6 @@ namespace Montador{
 					}else{
 						tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false,false);
 					}
-					cout << rotulo << " " << endereco << endl;
 				}				
 			}
 			if(modulo && !modulo_aberto)
@@ -382,7 +379,6 @@ namespace Montador{
 			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true, false);
-				cout << rotulo << " " << endereco << endl;
 			}
 			modulo = true;
 			if (modulo_aberto)
@@ -397,7 +393,6 @@ namespace Montador{
 			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,false, false);
-				cout << rotulo << " " << endereco << endl;
 			}
 			if (!modulo)
 				throw invalid_argument("Erro Semântico: END sem detectar um BEGIN");
@@ -410,7 +405,6 @@ namespace Montador{
 		else if(diretiva == "PUBLIC"){
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true, false);
-				cout << rotulo << " " << endereco << endl;
 			}
 			if(modulo && !modulo_aberto)
 				throw invalid_argument("Erro Semântico: PUBLIC apos o END");
@@ -422,7 +416,6 @@ namespace Montador{
 			linha_processada = true;
 			if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,0,0,true,false,true,false);
-				cout << rotulo << " " << endereco << endl;
 			}else{
 				throw invalid_argument("Erro Sintático: EXTERN sem label");
 			}
@@ -461,7 +454,6 @@ namespace Montador{
 			if(0==tokens.size()-(2+corretor_posicao)){
 				if(!rotulo.empty()){
 			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,false,false,false);
-			 		cout << rotulo << " " << endereco << endl;
 			    }
 			    endereco+=1;
 			}else if(1==tokens.size()-(2+corretor_posicao)){
@@ -471,7 +463,6 @@ namespace Montador{
 					throw invalid_argument("Erro Sintático: Argumento inválido");
 				if(!rotulo.empty()){
 			 		tabela_simbolo.inserir_simbolo(rotulo,endereco,num,false,false,false,false);
-			 		cout << rotulo << " " << endereco << endl;
 			    }
 			    endereco += num;
 			}
@@ -507,7 +498,6 @@ namespace Montador{
 		string instrucao = tokens[1+corretor_posicao].get_str();
 		if(!rotulo.empty()){
 				tabela_simbolo.inserir_simbolo(rotulo,endereco,0,false,true,true,false);
-				cout << rotulo << " " << endereco << endl;
 		}
 		if(!section_text || section_data)
 			throw invalid_argument("Erro Semântico: "+instrucao+" na secao errada");
