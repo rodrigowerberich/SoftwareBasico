@@ -1,0 +1,3 @@
+#!/bin/bash
+make montador
+make ligador

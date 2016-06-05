@@ -1,0 +1,27 @@
+Trabalho 1 - Software Básico 01/2016 - Turma B
+
+Nomes: 	Letícia Helena Silva Porto - 11/0127846
+	Rodrigo Werberich da Silva Moreira de Oliveira 	11/0139411
+
+Notas:
+O programa só acusa, normalmente, um erro por linha, se existir mais de um erro na mesma linha só será detectado o primeiro, pois o programa nao volta a analisar linhas com erro.
+
+Instrucoes para compilar:
+
+Método 1:
+Utilize o comando
+
+chmod +x compilar
+
+E depois rode compilar
+
+./compilar
+
+Método 2:
+Digite:
+
+make montador
+make ligador
+
+Trabalho feito nos Ubuntus 14.04.2 LTS e 14.04.3 LTS
+Versoes do g++ usada 4.8.2 e 4.8.4
